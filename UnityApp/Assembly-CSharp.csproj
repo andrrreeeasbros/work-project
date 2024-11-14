@@ -105,8 +105,10 @@
   <ItemGroup>
     <None Include="Assets\Scripts\WinMain\obj\Debug\net9.0-windows\ref\WinMain.dll" />
     <None Include="Assets\Scripts\WinMain\obj\Debug\net9.0-windows\WinMain.csproj.FileListAbsolute.txt" />
+    <None Include="Assets\Texture\fabrics_0075_keywords.txt" />
     <None Include="Assets\Scripts\WinMain\bin\Debug\net9.0-windows\WinMain.dll" />
     <None Include="Assets\Scripts\WinMain\obj\Debug\net9.0-windows\refint\WinMain.dll" />
+    <None Include="Assets\Texture\fabrics_0075_description.txt" />
     <None Include="Assets\Scripts\WinMain\obj\Debug\net9.0-windows\WinMain.dll" />
   </ItemGroup>
   <ItemGroup>
