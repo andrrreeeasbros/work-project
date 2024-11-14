@@ -71,6 +71,7 @@
     <Compile Include="Assets\Scripts\WinMain\obj\Debug\net9.0-windows\WinMain_0dufeuoi_wpftmp.GlobalUsings.g.cs" />
     <Compile Include="Assets\Scripts\WinMain\obj\Debug\net9.0-windows\App.g.cs" />
     <Compile Include="Assets\Scripts\WinMain\obj\Debug\net9.0-windows\WinMain_wi0xsstx_wpftmp.GlobalUsings.g.cs" />
+    <Compile Include="Assets\Scripts\WinMain\obj\Debug\net9.0-windows\WinMain_5kxubesm_wpftmp.GlobalUsings.g.cs" />
     <Compile Include="Assets\Scripts\WinMain\obj\Debug\net9.0-windows\WinMain_h5aplyjs_wpftmp.GlobalUsings.g.cs" />
     <Compile Include="Assets\Scripts\WinMain\obj\Debug\net9.0-windows\WinMain_kc1ahdti_wpftmp.AssemblyInfo.cs" />
     <Compile Include="Assets\Scripts\WinMain\obj\Debug\net9.0-windows\MainWindow.g.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="Assets\Scripts\WinMain\obj\Debug\net9.0-windows\WinMain_cbnef0wg_wpftmp.AssemblyInfo.cs" />
     <Compile Include="Assets\Scripts\WinMain\obj\Debug\net9.0-windows\WinMain_t2gpy0oo_wpftmp.GlobalUsings.g.cs" />
     <Compile Include="Assets\Scripts\WinMain\obj\Debug\net9.0-windows\WinMain_kc1ahdti_wpftmp.GlobalUsings.g.cs" />
+    <Compile Include="Assets\Scripts\WinMain\obj\Debug\net9.0-windows\WinMain_5kxubesm_wpftmp.AssemblyInfo.cs" />
     <Compile Include="Assets\Scripts\WinMain\obj\Debug\net9.0-windows\WinMain_t0yl534s_wpftmp.GlobalUsings.g.cs" />
     <Compile Include="Assets\Scripts\WinMain\obj\Debug\net9.0-windows\WinMain_uvsv1iid_wpftmp.GlobalUsings.g.cs" />
     <Compile Include="Assets\Scripts\WinMain\obj\Debug\net9.0-windows\WinMain_csi3mcf2_wpftmp.AssemblyInfo.cs" />
