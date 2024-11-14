@@ -3,9 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              Height="300" Width="650">
     <Grid Background="LightBlue">
-        <TextBlock Text="Это первое встроенное окно"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                   FontSize="16"/>
+        <!-- Видео на заднем фоне с отключенным звуком -->
+        <MediaElement Name="BackgroundVideo" 
+                      Source="img/nosignal.mp4"   
+                      Stretch="Fill"       
+                      HorizontalAlignment="Stretch" 
+                      VerticalAlignment="Stretch"
+                      MediaEnded="BackgroundVideo_MediaEnded"
+                      IsMuted="True"
+                      LoadedBehavior="Manual" />  <!-- Устанавливаем Manual для управления воспроизведением -->
     </Grid>
 </UserControl>
