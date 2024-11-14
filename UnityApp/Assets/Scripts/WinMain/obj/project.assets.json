@@ -8,26 +8,24 @@
     "net9.0-windows7.0": []
   },
   "packageFolders": {
-    "C:\\Users\\user\\.nuget\\packages\\": {}
+    "C:\\Users\\HP\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Project\\work-project\\UnityApp\\Assets\\Scripts\\WinMain\\WinMain.csproj",
+      "projectUniqueName": "C:\\Users\\HP\\Desktop\\ProjectHakaton\\work-project\\UnityApp\\Assets\\Scripts\\WinMain\\WinMain.csproj",
       "projectName": "WinMain",
-      "projectPath": "D:\\Project\\work-project\\UnityApp\\Assets\\Scripts\\WinMain\\WinMain.csproj",
-      "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-      "outputPath": "D:\\Project\\work-project\\UnityApp\\Assets\\Scripts\\WinMain\\obj\\",
+      "projectPath": "C:\\Users\\HP\\Desktop\\ProjectHakaton\\work-project\\UnityApp\\Assets\\Scripts\\WinMain\\WinMain.csproj",
+      "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\HP\\Desktop\\ProjectHakaton\\work-project\\UnityApp\\Assets\\Scripts\\WinMain\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0-windows"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {

@@ -40,3 +40,8 @@ D:\Project\work-project\UnityApp\Assets\Scripts\WinMain\obj\Debug\net9.0-windows
 D:\Project\work-project\UnityApp\Assets\Scripts\WinMain\obj\Debug\net9.0-windows\WinMain.pdb
 D:\Project\work-project\UnityApp\Assets\Scripts\WinMain\obj\Debug\net9.0-windows\WinMain.genruntimeconfig.cache
 D:\Project\work-project\UnityApp\Assets\Scripts\WinMain\obj\Debug\net9.0-windows\ref\WinMain.dll
+C:\Users\HP\Desktop\ProjectHakaton\work-project\UnityApp\Assets\Scripts\WinMain\obj\Debug\net9.0-windows\GeneratedInternalTypeHelper.g.cs
+C:\Users\HP\Desktop\ProjectHakaton\work-project\UnityApp\Assets\Scripts\WinMain\obj\Debug\net9.0-windows\ChildControl1.baml
+C:\Users\HP\Desktop\ProjectHakaton\work-project\UnityApp\Assets\Scripts\WinMain\obj\Debug\net9.0-windows\ChildControl2.baml
+C:\Users\HP\Desktop\ProjectHakaton\work-project\UnityApp\Assets\Scripts\WinMain\obj\Debug\net9.0-windows\ChildControl1.g.cs
+C:\Users\HP\Desktop\ProjectHakaton\work-project\UnityApp\Assets\Scripts\WinMain\obj\Debug\net9.0-windows\ChildControl2.g.cs
