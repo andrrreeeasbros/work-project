@@ -6,32 +6,54 @@
         xmlns:local="clr-namespace:WinMain"
         mc:Ignorable="d"
         Title="MainWindow" Height="700" Width="1250"
-        MinHeight="700" MinWidth="1250">
-    <Grid>
-        <!-- Кнопка с изображением в правом нижнем углу -->
-        <Button HorizontalAlignment="Right"
-                VerticalAlignment="Bottom"
-                Width="50" Height="50"
-                Margin="10"
-                Background="Transparent" BorderBrush="Transparent"
-                Click="ImageButton_Click">
-            <Button.Template>
-                <ControlTemplate TargetType="Button">
-                    <Image Source="img/pngwing.com (1).png" 
-                           Stretch="Fill" 
-                           Opacity="1"/>
-                </ControlTemplate>
-            </Button.Template>
-            <Button.Style>
-                <Style TargetType="Button">
-                    <!-- Триггер для изменения внешнего вида при наведении -->
-                    <Style.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Opacity" Value="0.7"/>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </Button.Style>
-        </Button>
+        MinHeight="700" MinWidth="1250"
+        ResizeMode="CanMinimize" 
+        WindowState="Normal">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="400" />
+            <RowDefinition Height="225" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <local:ChildControl1 Grid.Column="0" Margin="10" />
+            <local:ChildControl2 Grid.Column="1" Margin="10" />
+        </Grid>
+
+        <!-- Нижняя панель с кнопкой -->
+        <Grid Grid.Row="1">
+            <!-- Кнопка с изображением -->
+            <Button HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Width="75" Height="75"
+                    Margin="10"
+                    Background="LightGray"
+                    BorderBrush="Black"
+                    Click="ImageButton_Click">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Image Source="img/pngwing.com (1).png" 
+                               Stretch="Fill" 
+                               Opacity="1"/>
+                    </ControlTemplate>
+                </Button.Template>
+
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.7"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+        </Grid>
     </Grid>
 </Window>

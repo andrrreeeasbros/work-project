@@ -8,9 +8,16 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
-  <!-- Добавляем изображения в проект как ресурсы -->
+<ItemGroup>
+    <Resource Include="img/pngwing.com (1).png"/>
+</ItemGroup>
+
+
   <ItemGroup>
-    <Resource Include="img/pngwing.com (1).png" />
+    <!-- Видео -->
+    <Content Include="img/nosignal.mp4">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>  <!-- Копируем в выходную директорию -->
+    </Content>
   </ItemGroup>
 
 </Project>

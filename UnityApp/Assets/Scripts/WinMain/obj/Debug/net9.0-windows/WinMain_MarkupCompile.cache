@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-D:\Project\work-project\UnityApp\Assets\Scripts\WinMain\obj\Debug\net9.0-windows\
+C:\Users\HP\Desktop\ProjectHakaton\work-project\UnityApp\Assets\Scripts\WinMain\obj\Debug\net9.0-windows\
 WinMain
 none
 false
 TRACE;DEBUG;NET;NET9_0;NETCOREAPP
-D:\Project\work-project\UnityApp\Assets\Scripts\WinMain\App.xaml
-11407045341
-
-42120803456
+C:\Users\HP\Desktop\ProjectHakaton\work-project\UnityApp\Assets\Scripts\WinMain\App.xaml
+31478055838
+1659739581
+61880517425
 201668129756
-MainWindow.xaml;
+ChildControl1.xaml;ChildControl2.xaml;MainWindow.xaml;
 
 False
 
