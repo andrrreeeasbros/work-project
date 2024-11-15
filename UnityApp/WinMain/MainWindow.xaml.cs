@@ -1,7 +1,9 @@
 
-﻿using System;
+using System;
 using System.Windows;
 using System.Windows.Media.Animation;
+using System.IO;
+using System.Net.Sockets;
 
 namespace WinMain
 {
@@ -9,6 +11,7 @@ namespace WinMain
     {
         public MainWindow()
         {
+            System.Diagnostics.Process.Start("../BuildApp/My project.exe");
             InitializeComponent();
         }
 
@@ -48,14 +51,33 @@ namespace WinMain
             // Ваш код для обработки кнопки шестерёнки
         }
 
-         private void Camera1Button_Click(object sender, RoutedEventArgs e)
+          private void Camera1Button_Click(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine("Камера 1");
+            SendMessageToUnity("SwitchCamera:2");
         }
 
-        // Обработчик нажатия кнопки Камера 2
+        // Обработчик для кнопки Камера 2
         private void Camera2Button_Click(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine("Камера 2");
+            SendMessageToUnity("SwitchCamera:1");
         }
+
+        // Метод для отправки сообщения в Unity через TCP-сокет
+        private void SendMessageToUnity(string message)
+        {
+            try
+            {
+                var client = new TcpClient("127.0.0.1", 5000);  // Соединение с Unity сервером
+                var stream = client.GetStream();
+                var writer = new StreamWriter(stream);
+                writer.WriteLine(message);  // Отправляем команду
+                writer.Flush();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка подключения к Unity: " + ex.Message);
+            }
+        }
+
+}
 }
