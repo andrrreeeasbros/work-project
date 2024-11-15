@@ -1,6 +1,8 @@
-
 using System;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Shapes;  // Import for WPF Path
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.IO;
 using System.Net.Sockets;
@@ -11,7 +13,6 @@ namespace WinMain
     {
         public MainWindow()
         {
-            System.Diagnostics.Process.Start("../BuildApp/My project.exe");
             InitializeComponent();
         }
 
@@ -51,7 +52,8 @@ namespace WinMain
             // Ваш код для обработки кнопки шестерёнки
         }
 
-          private void Camera1Button_Click(object sender, RoutedEventArgs e)
+        // Обработчик для кнопки Камера 1
+        private void Camera1Button_Click(object sender, RoutedEventArgs e)
         {
             SendMessageToUnity("SwitchCamera:2");
         }
@@ -79,5 +81,18 @@ namespace WinMain
             }
         }
 
+        // Обработчик для кнопки "No devices"
+       private void NoDevicesButton_Click(object sender, RoutedEventArgs e)
+{
+    // Переключаем видимость панели
+    if (SlidePanel.Visibility == Visibility.Collapsed)
+    {
+        SlidePanel.Visibility = Visibility.Visible;  // Панель появляется
+    }
+    else
+    {
+        SlidePanel.Visibility = Visibility.Collapsed;  // Панель скрывается
+    }
 }
+    }
 }
