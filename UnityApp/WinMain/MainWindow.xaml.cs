@@ -1,11 +1,11 @@
 using System;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Shapes;  // Import for WPF Path
-using System.Windows.Media;
-using System.Windows.Media.Animation;
 using System.IO;
 using System.Net.Sockets;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using DirectShowLib;
+using Emgu.CV;
 
 namespace WinMain
 {
@@ -17,55 +17,20 @@ namespace WinMain
             InitializeComponent();
         }
 
-        // Обработчик события для кнопки "Выберите камеру"
-        private void SelectCameraButton_Click(object sender, RoutedEventArgs e)
-        {
-            // Если кнопки видны, скрываем их, иначе показываем
-            if (Camera1Button.Visibility == Visibility.Visible)
-            {
-                // Скрыть кнопки с анимацией
-                Storyboard hideAnimation = (Storyboard)this.Resources["HideButtonsAnimation"];
-                hideAnimation.Begin();
-            }
-            else
-            {
-                // Сделать кнопки видимыми
-                Camera1Button.Visibility = Visibility.Visible;
-                Camera2Button.Visibility = Visibility.Visible;
-
-                // Запуск анимации для появления кнопок
-                Storyboard showAnimation = (Storyboard)this.Resources["ShowButtonsAnimation"];
-                showAnimation.Begin();
-            }
-        }
-
-        // Обработчик завершения анимации для скрытия кнопок
         private void HideButtonsAnimation_Completed(object sender, EventArgs e)
         {
-            // После завершения анимации скрываем кнопки
             Camera1Button.Visibility = Visibility.Collapsed;
             Camera2Button.Visibility = Visibility.Collapsed;
         }
-
-        // Обработчик события для кнопки шестерёнки
-        private void ImageButton_Click(object sender, RoutedEventArgs e)
-        {
-            // Ваш код для обработки кнопки шестерёнки
-        }
-
-        // Обработчик для кнопки Камера 1
         private void Camera1Button_Click(object sender, RoutedEventArgs e)
         {
             SendMessageToUnity("SwitchCamera:2");
         }
 
-        // Обработчик для кнопки Камера 2
         private void Camera2Button_Click(object sender, RoutedEventArgs e)
         {
             SendMessageToUnity("SwitchCamera:1");
         }
-
-        // Метод для отправки сообщения в Unity через TCP-сокет
         private void SendMessageToUnity(string message)
         {
             try
@@ -81,19 +46,71 @@ namespace WinMain
                 MessageBox.Show("Ошибка подключения к Unity: " + ex.Message);
             }
         }
+        private void SelectCameraButton_Click(object sender, RoutedEventArgs e)
+        {
+                // Сделать кнопки видимыми
+                Camera1Button.Visibility = Visibility.Visible;
+                Camera2Button.Visibility = Visibility.Visible;
+        }
+        private void ImageButton_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Настройки открыты");
+        }
 
-        // Обработчик для кнопки "No devices"
-       private void NoDevicesButton_Click(object sender, RoutedEventArgs e)
-{
-    // Переключаем видимость панели
-    if (SlidePanel.Visibility == Visibility.Collapsed)
-    {
-        SlidePanel.Visibility = Visibility.Visible;  // Панель появляется
-    }
-    else
-    {
-        SlidePanel.Visibility = Visibility.Collapsed;  // Панель скрывается
-    }
-}
+        private void NoDevicesButton_Click(object sender, RoutedEventArgs e)
+        {
+            PopulateCameraDevices();
+            SlidePanel.Visibility = SlidePanel.Visibility == Visibility.Visible 
+                                    ? Visibility.Collapsed 
+                                    : Visibility.Visible;
+        }
+
+        private void PopulateCameraDevices()
+        {
+            SlidePanelContent.Children.Clear();
+
+            var devices = DsDevice.GetDevicesOfCat(FilterCategory.VideoInputDevice);
+            if (devices.Length == 0)
+            {
+                SlidePanelContent.Children.Add(new TextBlock
+                {
+                    Text = "Нет доступных устройств",
+                    Foreground = Brushes.White,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center
+                });
+            }
+            else
+            {
+                foreach (var device in devices)
+                {
+                    var button = new Button
+                    {
+                        Content = device.Name,
+                        Margin = new Thickness(5),
+                        Background = Brushes.White,
+                        Foreground = Brushes.Black,
+                        FontWeight = FontWeights.Bold
+                    };
+                    button.Click += (s, e) => SelectCamera(device);
+                    SlidePanelContent.Children.Add(button);
+                }
+            }
+        }
+        
+            // Вывод названия камеры
+        private void SelectCamera(DsDevice device)
+        {
+            SlidePanel.Visibility = Visibility.Collapsed;
+            NoDevicesButton.Content = device.Name;
+            
+        // Передаем устройство в ChildControl2
+        // if (ChildControlHost.Content is ChildControl2 childControl)
+        // {
+        //     childControl.StartCameraStream(device);
+        // }
+
+            MessageBox.Show($"Выбрана камера: {device.Name}");
+        }
     }
 }
