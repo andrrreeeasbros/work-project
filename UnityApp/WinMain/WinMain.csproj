@@ -9,7 +9,7 @@
   </PropertyGroup>
 
 <ItemGroup>
-    <Resource Include="img/pngwing.com (1).png"/>
+    <Resource Include="img/pngwing.com (1).png" />
 </ItemGroup>
 
 
@@ -18,6 +18,13 @@
     <Content Include="img/nosignal.mp4">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>  <!-- Копируем в выходную директорию -->
     </Content>
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="DirectShowLib" Version="1.0.0" />
+    <PackageReference Include="Emgu.CV" Version="4.9.0.5494" />
+    <PackageReference Include="Emgu.CV.runtime.windows" Version="4.9.0.5494" />
   </ItemGroup>
 
 </Project>
