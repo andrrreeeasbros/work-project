@@ -7,6 +7,7 @@ using System.Windows.Media;
 using DirectShowLib;
 using Emgu.CV;
 
+
 namespace WinMain
 {
     public partial class MainWindow : Window

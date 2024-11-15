@@ -115,20 +115,20 @@
 
         <!-- Кнопка "Выберите камеру" -->
         <Button Content="Выберите камеру" HorizontalAlignment="Left" VerticalAlignment="Top"
-                Width="170" Height="40" Margin="190, 0, 0, 0" Click="SelectCameraButton_Click" 
+                Width="170" Height="40" Margin="220, 0, 0, 0" Click="SelectCameraButton_Click" 
                 Style="{StaticResource WhiteButtonStyle}" Grid.Row="1"
                 HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                 FontSize="14"/>
 
         <!-- Кнопки Камера 1 и Камера 2 (сначала скрыты) -->
         <Button x:Name="Camera1Button" Content="Камера 1" HorizontalAlignment="Left" VerticalAlignment="Top"
-                Width="170" Height="40" Margin="0, 0, 0, 0"
+                Width="170" Height="40" Margin="15, 0, 0, 0"
                 Style="{StaticResource WhiteButtonStyle}" Grid.Row="1"
                 RenderTransformOrigin="0.5, 0.5" Visibility="Collapsed"
                 FontSize="14" Click="Camera1Button_Click"/>
 
         <Button x:Name="Camera2Button" Content="Камера 2" HorizontalAlignment="Left" VerticalAlignment="Top"
-                Width="170" Height="40" Margin="380, 0, 0, 0"
+                Width="170" Height="40" Margin="415, 0, 0, 0"
                 Style="{StaticResource WhiteButtonStyle}" Grid.Row="1"
                 RenderTransformOrigin="0.5, 0.5" Visibility="Collapsed"
                 FontSize="14" Click="Camera2Button_Click"/>
@@ -151,7 +151,7 @@
         </Grid>
 
 <Button x:Name="NoDevicesButton" Content="No devices" HorizontalAlignment="Left" VerticalAlignment="Top"
-        Width="170" Height="40" Margin="700, 0, 0, 0" 
+        Width="170" Height="40" Margin="610, 0, 0, 0" 
         Style="{StaticResource WhiteButtonStyle}" Grid.Row="1"
         HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
         FontSize="14" Click="NoDevicesButton_Click">
