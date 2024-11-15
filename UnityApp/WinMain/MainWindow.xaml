@@ -4,14 +4,22 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WinMain"
-
         mc:Ignorable="d"
         Title="MainWindow" Height="700" Width="1250"
         MinHeight="700" MinWidth="1250"
-        ResizeMode="CanMinimize" 
+        ResizeMode="CanMinimize"
         WindowState="Normal">
-
     <Window.Resources>
+        <!-- Анимация для перемещения панели -->
+        <Storyboard x:Key="SlidePanelAnimation">
+            <DoubleAnimation
+                Storyboard.TargetName="SlidePanel"
+                Storyboard.TargetProperty="Margin"
+                From="680, 0, 0, 0"
+                To="680, 80, 0, 0"
+                Duration="0:0:0.3" />
+        </Storyboard>
+
         <!-- Стиль для кнопок -->
         <Style x:Key="WhiteButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="White"/>
@@ -113,17 +121,17 @@
                 FontSize="14"/>
 
         <!-- Кнопки Камера 1 и Камера 2 (сначала скрыты) -->
-<Button x:Name="Camera1Button" Content="Камера 1" HorizontalAlignment="Left" VerticalAlignment="Top"
-        Width="170" Height="40" Margin="0, 0, 0, 0"
-        Style="{StaticResource WhiteButtonStyle}" Grid.Row="1"
-        RenderTransformOrigin="0.5, 0.5" Visibility="Collapsed"
-        FontSize="14" Click="Camera1Button_Click"/>
+        <Button x:Name="Camera1Button" Content="Камера 1" HorizontalAlignment="Left" VerticalAlignment="Top"
+                Width="170" Height="40" Margin="0, 0, 0, 0"
+                Style="{StaticResource WhiteButtonStyle}" Grid.Row="1"
+                RenderTransformOrigin="0.5, 0.5" Visibility="Collapsed"
+                FontSize="14" Click="Camera1Button_Click"/>
 
-<Button x:Name="Camera2Button" Content="Камера 2" HorizontalAlignment="Left" VerticalAlignment="Top"
-        Width="170" Height="40" Margin="380, 0, 0, 0"
-        Style="{StaticResource WhiteButtonStyle}" Grid.Row="1"
-        RenderTransformOrigin="0.5, 0.5" Visibility="Collapsed"
-        FontSize="14" Click="Camera2Button_Click"/>
+        <Button x:Name="Camera2Button" Content="Камера 2" HorizontalAlignment="Left" VerticalAlignment="Top"
+                Width="170" Height="40" Margin="380, 0, 0, 0"
+                Style="{StaticResource WhiteButtonStyle}" Grid.Row="1"
+                RenderTransformOrigin="0.5, 0.5" Visibility="Collapsed"
+                FontSize="14" Click="Camera2Button_Click"/>
 
         <!-- Нижняя панель с кнопкой -->
         <Grid Grid.Row="2">
@@ -141,5 +149,42 @@
                 </Button.Template>
             </Button>
         </Grid>
+
+<Button x:Name="NoDevicesButton" Content="No devices" HorizontalAlignment="Left" VerticalAlignment="Top"
+        Width="170" Height="40" Margin="700, 0, 0, 0" 
+        Style="{StaticResource WhiteButtonStyle}" Grid.Row="1"
+        HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+        FontSize="14" Click="NoDevicesButton_Click">
+    <Button.Template>
+        <ControlTemplate TargetType="Button">
+            <Border BorderBrush="White" BorderThickness="1" Background="Black">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="20" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Текст кнопки -->
+                    <TextBlock Text="No devices" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+
+                    <!-- Три белые полоски -->
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Vertical">
+                        <Rectangle Width="40" Height="2" Fill="White" Margin="0, 1, 5, 0"/>
+                        <Rectangle Width="40" Height="2" Fill="White" Margin="0, 5, 5, 0"/>
+                        <Rectangle Width="40" Height="2" Fill="White" Margin="0, 5, 5, 0"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </ControlTemplate>
+    </Button.Template>
+</Button>
+
+<!-- Панель, которая появляется под кнопкой -->
+<Border x:Name="SlidePanel" Background="Black" Opacity="0.7" Width="170" Height="100"
+        HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="700, 0, 0, -140"  
+        Visibility="Hidden" Panel.ZIndex="2">
+    <TextBlock Text="Нет устройств" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+</Border>
+
     </Grid>
 </Window>

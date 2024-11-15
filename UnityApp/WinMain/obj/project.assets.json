@@ -8,31 +8,24 @@
     "net9.0-windows7.0": []
   },
   "packageFolders": {
-    "C:\\Users\\Кот\\.nuget\\packages\\": {},
-    "G:\\Visual Studio(Instr, SDK)\\NuGetPackages": {}
+    "C:\\Users\\HP\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "G:\\UnityProject\\work-project\\UnityApp\\WinMain\\WinMain.csproj",
+      "projectUniqueName": "C:\\Users\\HP\\Desktop\\ProjectHakaton\\work-project\\UnityApp\\WinMain\\WinMain.csproj",
       "projectName": "WinMain",
-      "projectPath": "G:\\UnityProject\\work-project\\UnityApp\\WinMain\\WinMain.csproj",
-      "packagesPath": "C:\\Users\\Кот\\.nuget\\packages\\",
-      "outputPath": "G:\\UnityProject\\work-project\\UnityApp\\WinMain\\obj\\",
+      "projectPath": "C:\\Users\\HP\\Desktop\\ProjectHakaton\\work-project\\UnityApp\\WinMain\\WinMain.csproj",
+      "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\HP\\Desktop\\ProjectHakaton\\work-project\\UnityApp\\WinMain\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "G:\\Visual Studio(Instr, SDK)\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\Кот\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0-windows"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
