@@ -7,7 +7,9 @@ public class UnityServer : MonoBehaviour
 {
     public Camera frontCamera;
     public Camera mainCamera;
-    
+    public GameObject leftWall;
+
+    public Light mainLight;
     private TcpListener listener;
     private Thread listenerThread;
 
@@ -15,9 +17,13 @@ public class UnityServer : MonoBehaviour
     {
         frontCamera = GameObject.FindGameObjectWithTag("FrontCam")?.GetComponent<Camera>();
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera")?.GetComponent<Camera>();
+        leftWall = GameObject.FindGameObjectWithTag("leftWall");
+        mainLight = GameObject.FindGameObjectWithTag("sceneLight")?.GetComponent<Light>();
         listenerThread = new Thread(new ThreadStart(ListenForMessages));
         listenerThread.IsBackground = true; // Сделать поток фоновым
         listenerThread.Start();
+        leftWall.gameObject.SetActive(false);
+        mainLight.intensity = 5;
     }
 
     // Метод для прослушивания сообщений от клиента
@@ -57,17 +63,23 @@ public class UnityServer : MonoBehaviour
     // Метод для переключения между камерами
     void SwitchCamera(int cameraIndex)
     {
-        // Переносим переключение камеры в основной поток
         UnityMainThreadDispatcher.Instance.Enqueue(() =>
         {
+            // Камера FrontCam
             if (cameraIndex == 1)
             {
+                mainLight.intensity = 1;
                 frontCamera.gameObject.SetActive(true);
                 mainCamera.gameObject.SetActive(false);
+                leftWall.gameObject.SetActive(true);
                 Debug.Log("Switched to Front Camera");
             }
+
+            // Камера MainCamera
             else if (cameraIndex == 2)
             {
+                mainLight.intensity = 5;
+                leftWall.gameObject.SetActive(false);
                 frontCamera.gameObject.SetActive(false);
                 mainCamera.gameObject.SetActive(true);
                 Debug.Log("Switched to Main Camera");
