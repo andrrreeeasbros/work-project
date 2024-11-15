@@ -13,6 +13,7 @@ namespace WinMain
     {
         public MainWindow()
         {
+            System.Diagnostics.Process.Start("../BuildApp/My project.exe");
             InitializeComponent();
         }
 
