@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("WinMain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2644354e6b5db0d84df411637bc30b1c5682dcc5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a2f31e3aaf5920e92c411534f1c32f7bf7e167be")]
 [assembly: System.Reflection.AssemblyProductAttribute("WinMain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WinMain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
