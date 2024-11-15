@@ -7,12 +7,14 @@ using System.Windows.Media.Animation;
 using System.IO;
 using System.Net.Sockets;
 
+
 namespace WinMain
 {
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
+            System.Diagnostics.Process.Start("../BuildApp/My project.exe");
             InitializeComponent();
         }
 
