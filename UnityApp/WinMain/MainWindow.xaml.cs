@@ -12,6 +12,7 @@ namespace WinMain
 {
     public partial class MainWindow : Window
     {
+        private bool _isConsoleVisible = false;
         public MainWindow()
         {
             System.Diagnostics.Process.Start("../BuildApp/My project.exe");
@@ -98,7 +99,30 @@ namespace WinMain
                 }
             }
         }
-        
+        private void ToggleConsoleButton_Click(object sender, RoutedEventArgs e)
+        {
+            _isConsoleVisible = !_isConsoleVisible; // Переключаем состояние
+
+            // Меняем стрелку в зависимости от состояния
+            var arrow = ToggleConsoleButton.Template.FindName("ArrowIcon", ToggleConsoleButton) as System.Windows.Shapes.Path; // Указываем полное имя класса Path
+
+            if (arrow != null)
+            {
+                if (_isConsoleVisible)
+                {
+                    // Стрелка вниз (открыта консоль)
+                    arrow.Data = Geometry.Parse("M 0,0 L 5,5 L 10,0 Z"); // Стрелка вниз
+                }
+                else
+                {
+                    // Стрелка вверх (консоль закрыта)
+                    arrow.Data = Geometry.Parse("M 0,5 L 5,0 L 10,5 Z"); // Стрелка вверх
+                }
+            }
+
+            // Дополнительная логика для показа/скрытия консоли
+            ConsoleTextBox.Visibility = _isConsoleVisible ? Visibility.Visible : Visibility.Collapsed;
+        }
             // Вывод названия камеры
         private void SelectCamera(DsDevice device)
         {

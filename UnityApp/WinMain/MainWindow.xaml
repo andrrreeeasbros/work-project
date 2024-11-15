@@ -185,6 +185,36 @@
         Visibility="Collapsed" Panel.ZIndex="2">
     <StackPanel x:Name="SlidePanelContent" Orientation="Vertical" />
 </Border>
+<!-- Кнопка для отображения консоли -->
+<Button x:Name="ToggleConsoleButton" 
+        HorizontalAlignment="Left" VerticalAlignment="Bottom"
+        Width="475" Height="40" Margin="0, 0, 400, 0" 
+        Click="ToggleConsoleButton_Click" 
+        Grid.Row="1" FontSize="12"
+        Background="Black" Foreground="White"
+        BorderBrush="Transparent" FocusVisualStyle="{x:Null}">
+    
+    <!-- Шаблон кнопки -->
+    <Button.Template>
+        <ControlTemplate TargetType="Button">
+            <Border BorderBrush="Transparent" BorderThickness="1" Background="Black">
+                <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <!-- Вектор стрелки (вверх или вниз) -->
+                    <Path x:Name="ArrowIcon" VerticalAlignment="Center" HorizontalAlignment="Center" 
+                          Fill="White" Data="M 0,5 L 5,0 L 10,5 Z" 
+                          Stretch="Uniform" Width="16" Height="16"/>
+                </Grid>
+            </Border>
+        </ControlTemplate>
+    </Button.Template>
+</Button>
 
+
+<!-- Текстовая консоль с полупрозрачным фоном -->
+<TextBox x:Name="ConsoleTextBox" Grid.Row="1" VerticalAlignment="Bottom" 
+         Margin="0, 0, 719, 38" Height="125" Width="475"
+         Background="#BF000000" Foreground="White" 
+         FontFamily="Consolas" FontSize="14" TextWrapping="Wrap"
+         Visibility="Collapsed" IsReadOnly="True"/>
     </Grid>
 </Window>
