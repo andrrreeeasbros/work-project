@@ -1,3 +1,4 @@
+
 ﻿using System;
 using System.Windows;
 using System.Windows.Media.Animation;
@@ -57,5 +58,4 @@ namespace WinMain
         {
             Console.WriteLine("Камера 2");
         }
-    }
 }
