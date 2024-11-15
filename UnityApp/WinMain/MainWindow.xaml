@@ -4,11 +4,90 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WinMain"
+
         mc:Ignorable="d"
         Title="MainWindow" Height="700" Width="1250"
         MinHeight="700" MinWidth="1250"
         ResizeMode="CanMinimize" 
         WindowState="Normal">
+
+    <Window.Resources>
+        <!-- Стиль для кнопок -->
+        <Style x:Key="WhiteButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10"/>
+            
+            <!-- Убираем фокусное выделение, чтобы не было синей обводки -->
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+
+            <!-- Триггер для изменения фона, текста и бордюра при наведении -->
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="Black"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="BorderBrush" Value="White"/>
+                </Trigger>
+
+                <!-- Убираем визуальные эффекты при фокусе -->
+                <Trigger Property="IsKeyboardFocused" Value="True">
+                    <Setter Property="Background" Value="White"/>
+                    <Setter Property="BorderBrush" Value="Black"/>
+                    <Setter Property="Foreground" Value="Black"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Стиль для шестерёнки -->
+        <Style x:Key="GearButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="LightGray"/>
+            <Setter Property="Width" Value="75"/>
+            <Setter Property="Height" Value="75"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="0"/>
+            
+            <!-- Убираем фокусное выделение -->
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        </Style>
+
+        <!-- Анимация для появления кнопок с плавным эффектом -->
+        <Storyboard x:Key="ShowButtonsAnimation">
+            <!-- Камера 1 - плавное появление -->
+            <DoubleAnimation
+                Storyboard.TargetName="Camera1Button"
+                Storyboard.TargetProperty="Opacity"
+                From="0" To="1" Duration="0:0:0.5"/>
+
+            <!-- Камера 2 - плавное появление -->
+            <DoubleAnimation
+                Storyboard.TargetName="Camera2Button"
+                Storyboard.TargetProperty="Opacity"
+                From="0" To="1" Duration="0:0:0.5"/>
+        </Storyboard>
+
+        <!-- Анимация для исчезновения кнопок с плавным эффектом -->
+        <Storyboard x:Key="HideButtonsAnimation" Completed="HideButtonsAnimation_Completed">
+            <!-- Камера 1 - плавное исчезновение -->
+            <DoubleAnimation
+                Storyboard.TargetName="Camera1Button"
+                Storyboard.TargetProperty="Opacity"
+                From="1" To="0" Duration="0:0:0.5"/>
+
+            <!-- Камера 2 - плавное исчезновение -->
+            <DoubleAnimation
+                Storyboard.TargetName="Camera2Button"
+                Storyboard.TargetProperty="Opacity"
+                From="1" To="0" Duration="0:0:0.5"/>
+        </Storyboard>
+    </Window.Resources>
 
     <Grid Margin="20">
         <Grid.RowDefinitions>
@@ -26,16 +105,33 @@
             <local:ChildControl2 Grid.Column="1" Margin="10" />
         </Grid>
 
+        <!-- Кнопка "Выберите камеру" -->
+        <Button Content="Выберите камеру" HorizontalAlignment="Left" VerticalAlignment="Top"
+                Width="170" Height="40" Margin="190, 0, 0, 0" Click="SelectCameraButton_Click" 
+                Style="{StaticResource WhiteButtonStyle}" Grid.Row="1"
+                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                FontSize="14"/>
+
+        <!-- Кнопки Камера 1 и Камера 2 (сначала скрыты) -->
+<Button x:Name="Camera1Button" Content="Камера 1" HorizontalAlignment="Left" VerticalAlignment="Top"
+        Width="170" Height="40" Margin="0, 0, 0, 0"
+        Style="{StaticResource WhiteButtonStyle}" Grid.Row="1"
+        RenderTransformOrigin="0.5, 0.5" Visibility="Collapsed"
+        FontSize="14" Click="Camera1Button_Click"/>
+
+<Button x:Name="Camera2Button" Content="Камера 2" HorizontalAlignment="Left" VerticalAlignment="Top"
+        Width="170" Height="40" Margin="380, 0, 0, 0"
+        Style="{StaticResource WhiteButtonStyle}" Grid.Row="1"
+        RenderTransformOrigin="0.5, 0.5" Visibility="Collapsed"
+        FontSize="14" Click="Camera2Button_Click"/>
+
         <!-- Нижняя панель с кнопкой -->
-        <Grid Grid.Row="1">
-            <!-- Кнопка с изображением -->
-            <Button HorizontalAlignment="Right"
+        <Grid Grid.Row="2">
+            <Button x:Name="GearButton" HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
-                    Width="75" Height="75"
-                    Margin="10"
-                    Background="LightGray"
-                    BorderBrush="Black"
-                    Click="ImageButton_Click">
+                    Click="ImageButton_Click"
+                    Style="{StaticResource GearButtonStyle}">
+
                 <Button.Template>
                     <ControlTemplate TargetType="Button">
                         <Image Source="img/pngwing.com (1).png" 
@@ -43,16 +139,6 @@
                                Opacity="1"/>
                     </ControlTemplate>
                 </Button.Template>
-
-                <Button.Style>
-                    <Style TargetType="Button">
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Opacity" Value="0.7"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
             </Button>
         </Grid>
     </Grid>
