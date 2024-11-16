@@ -10,15 +10,40 @@
         ResizeMode="CanMinimize"
         WindowState="Normal">
     <Window.Resources>
-        <!-- Анимация для перемещения панели -->
-        <Storyboard x:Key="SlidePanelAnimation">
-            <DoubleAnimation
-                Storyboard.TargetName="SlidePanel"
-                Storyboard.TargetProperty="Margin"
-                From="680, 0, 0, 0"
-                To="680, 80, 0, 0"
-                Duration="0:0:0.3" />
-        </Storyboard>
+
+
+
+                <!-- Общий стиль для всех TextBlock -->
+        <Style TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Consolas"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="Black"/>
+        </Style>
+
+        <!-- Общий стиль для всех TextBox -->
+        <Style TargetType="TextBox">
+            <Setter Property="FontFamily" Value="Consolas"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+
+
+    <!-- Анимация появления консоли -->
+    <Storyboard x:Key="ShowConsoleTextBoxAnimation">
+        <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                         From="0" To="1" Duration="0:0:0.5" />
+        <DoubleAnimation Storyboard.TargetProperty="Height"
+                         From="0" To="125" Duration="0:0:0.5" />
+    </Storyboard>
+
+    <!-- Анимация исчезновения консоли -->
+    <Storyboard x:Key="HideConsoleTextBoxAnimation">
+        <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                         From="1" To="0" Duration="0:0:0.5" />
+        <DoubleAnimation Storyboard.TargetProperty="Height"
+                         From="125" To="0" Duration="0:0:0.5" />
+    </Storyboard>
+
 
         <!-- Стиль для кнопок -->
         <Style x:Key="WhiteButtonStyle" TargetType="Button">
@@ -72,13 +97,13 @@
             <DoubleAnimation
                 Storyboard.TargetName="Camera1Button"
                 Storyboard.TargetProperty="Opacity"
-                From="0" To="1" Duration="0:0:0.5"/>
+                From="0" To="1" Duration="0:0:0.3"/>
 
             <!-- Камера 2 - плавное появление -->
             <DoubleAnimation
                 Storyboard.TargetName="Camera2Button"
                 Storyboard.TargetProperty="Opacity"
-                From="0" To="1" Duration="0:0:0.5"/>
+                From="0" To="1" Duration="0:0:0.3"/>
         </Storyboard>
 
         <!-- Анимация для исчезновения кнопок с плавным эффектом -->
@@ -87,51 +112,198 @@
             <DoubleAnimation
                 Storyboard.TargetName="Camera1Button"
                 Storyboard.TargetProperty="Opacity"
-                From="1" To="0" Duration="0:0:0.5"/>
+                From="1" To="0" Duration="0:0:0.3"/>
 
             <!-- Камера 2 - плавное исчезновение -->
             <DoubleAnimation
                 Storyboard.TargetName="Camera2Button"
                 Storyboard.TargetProperty="Opacity"
-                From="1" To="0" Duration="0:0:0.5"/>
+                From="1" To="0" Duration="0:0:0.3"/>
         </Storyboard>
+
+        <!-- Анимация для отображения панели -->
+        <Storyboard x:Key="ShowSlidePanelAnimation">
+            <DoubleAnimation
+                Storyboard.TargetName="SlidePanel"
+                Storyboard.TargetProperty="Opacity"
+                From="0" To="1" Duration="0:0:0.3"/>
+        </Storyboard>
+
+        <!-- Анимация для скрытия панели -->
+        <Storyboard x:Key="HideSlidePanelAnimation">
+            <DoubleAnimation
+                Storyboard.TargetName="SlidePanel"
+                Storyboard.TargetProperty="Opacity"
+                From="1" To="0" Duration="0:0:0.3"/>
+        </Storyboard>
+
+
+
+           <!-- Анимация появления кнопки -->
+    <Storyboard x:Key="ShowToggleConsoleButtonAnimation">
+        <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                         From="0" To="1" Duration="0:0:0.5" />
+        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)"
+                         From="20" To="0" Duration="0:0:0.5" />
+    </Storyboard>
+
+    <!-- Анимация скрытия кнопки -->
+    <Storyboard x:Key="HideToggleConsoleButtonAnimation">
+        <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                         From="1" To="0" Duration="0:0:0.5" />
+        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)"
+                         From="0" To="20" Duration="0:0:0.5" />
+    </Storyboard>
+
+        <!-- Новый стиль для кнопок с анимацией при клике -->
+        <Style x:Key="AnimatedButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="Black"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="BorderBrush" Value="White"/>
+                </Trigger>
+
+                <Trigger Property="IsPressed" Value="True">
+                    <!-- Анимация при нажатии -->
+                    <Setter Property="RenderTransform">
+                        <Setter.Value>
+                            <ScaleTransform ScaleX="0.95" ScaleY="0.95"/>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+
+                <Trigger Property="IsKeyboardFocused" Value="True">
+                    <Setter Property="Background" Value="White"/>
+                    <Setter Property="BorderBrush" Value="Black"/>
+                    <Setter Property="Foreground" Value="Black"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
     </Window.Resources>
 
-    <Grid Margin="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="400" />
-            <RowDefinition Height="225" />
-        </Grid.RowDefinitions>
+<Grid Margin="20">
+    <Grid.RowDefinitions>
+        <RowDefinition Height="400" />
+        <RowDefinition Height="225" />
+    </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+    <Grid Grid.Row="0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
-            <local:ChildControl1 Grid.Column="0" Margin="10" />
-            <local:ChildControl2 Grid.Column="1" Margin="10" />
-        </Grid>
+        <!-- 3D надпись над ChildControl1 -->
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0"
+                   FontSize="20" FontWeight="Bold" Foreground="Black" Text="3D">
+            <!-- Эффект тени для улучшения 3D визуализации -->
+        </TextBlock>
 
-        <!-- Кнопка "Выберите камеру" -->
-        <Button Content="Выберите камеру" HorizontalAlignment="Left" VerticalAlignment="Top"
-                Width="170" Height="40" Margin="220, 0, 0, 0" Click="SelectCameraButton_Click" 
-                Style="{StaticResource WhiteButtonStyle}" Grid.Row="1"
-                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                FontSize="14"/>
+        <!-- Ваши элементы управления -->
+        <local:ChildControl1 Grid.Column="0" Margin="10" />
+        <local:ChildControl2 Grid.Column="1" Margin="10" />
 
-        <!-- Кнопки Камера 1 и Камера 2 (сначала скрыты) -->
-        <Button x:Name="Camera1Button" Content="Камера 1" HorizontalAlignment="Left" VerticalAlignment="Top"
-                Width="170" Height="40" Margin="15, 0, 0, 0"
-                Style="{StaticResource WhiteButtonStyle}" Grid.Row="1"
-                RenderTransformOrigin="0.5, 0.5" Visibility="Collapsed"
-                FontSize="14" Click="Camera1Button_Click"/>
+        <!-- 3D надпись над ChildControl2 -->
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0"
+                   FontSize="20" FontWeight="Bold" Foreground="Black" Text="Camera"
+                   Grid.Column="1">
+            <!-- Эффект тени для улучшения 3D визуализации -->
+        </TextBlock>
 
-        <Button x:Name="Camera2Button" Content="Камера 2" HorizontalAlignment="Left" VerticalAlignment="Top"
-                Width="170" Height="40" Margin="415, 0, 0, 0"
-                Style="{StaticResource WhiteButtonStyle}" Grid.Row="1"
-                RenderTransformOrigin="0.5, 0.5" Visibility="Collapsed"
-                FontSize="14" Click="Camera2Button_Click"/>
+    </Grid>
+
+
+
+<Button Content="Выберите камеру" HorizontalAlignment="Left" VerticalAlignment="Top"
+        Width="170" Height="40" Margin="215, 0, 0, 0" Click="SelectCameraButton_Click" 
+        Grid.Row="1"
+        HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+        FontSize="14">
+    <Button.Template>
+        <ControlTemplate TargetType="Button">
+            <Border x:Name="ButtonBorder" BorderBrush="White" BorderThickness="1" Background="Black">
+                <Grid>
+                    <!-- Текст кнопки -->
+                    <TextBlock Text="{TemplateBinding Content}" VerticalAlignment="Center" HorizontalAlignment="Center" 
+                               Foreground="White" FontWeight="Bold" FontSize="16" />
+                </Grid>
+            </Border>
+            <!-- Триггеры для изменения фона -->
+            <ControlTemplate.Triggers>
+                <!-- Триггер для изменения фона при наведении -->
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="ButtonBorder" Property="Background" Value="#A9A9A9"/> <!-- Темнее серый -->
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    </Button.Template>
+</Button>
+
+<!-- Кнопка "Камера 1" -->
+<Button x:Name="Camera1Button" Content="Камера 1" HorizontalAlignment="Left" VerticalAlignment="Top"
+        Width="170" Height="40" Margin="15, 0, 0, 0"
+        Grid.Row="1"
+        RenderTransformOrigin="0.5, 0.5" Visibility="Collapsed"
+        FontSize="14" Click="Camera1Button_Click">
+    <Button.Template>
+        <ControlTemplate TargetType="Button">
+            <Border x:Name="ButtonBorder" BorderBrush="White" BorderThickness="1" Background="Black">
+                <Grid>
+                    <!-- Текст кнопки -->
+                    <TextBlock Text="{TemplateBinding Content}" VerticalAlignment="Center" HorizontalAlignment="Center"
+                               Foreground="White" FontWeight="Bold" FontSize="16" />
+                </Grid>
+            </Border>
+            <!-- Триггеры для изменения фона -->
+            <ControlTemplate.Triggers>
+                <!-- Триггер для изменения фона при наведении -->
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="ButtonBorder" Property="Background" Value="#A9A9A9"/> <!-- Темнее серый -->
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    </Button.Template>
+</Button>
+
+<!-- Кнопка "Камера 2" -->
+<Button x:Name="Camera2Button" Content="Камера 2" HorizontalAlignment="Left" VerticalAlignment="Top"
+        Width="170" Height="40" Margin="415, 0, 0, 0"
+        Grid.Row="1"
+        RenderTransformOrigin="0.5, 0.5" Visibility="Collapsed"
+        FontSize="14" Click="Camera2Button_Click">
+    <Button.Template>
+        <ControlTemplate TargetType="Button">
+            <Border x:Name="ButtonBorder" BorderBrush="White" BorderThickness="1" Background="Black">
+                <Grid>
+                    <!-- Текст кнопки -->
+                    <TextBlock Text="{TemplateBinding Content}" VerticalAlignment="Center" HorizontalAlignment="Center"
+                               Foreground="White" FontWeight="Bold" FontSize="16" />
+                </Grid>
+            </Border>
+            <!-- Триггеры для изменения фона -->
+            <ControlTemplate.Triggers>
+                <!-- Триггер для изменения фона при наведении -->
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="ButtonBorder" Property="Background" Value="#A9A9A9"/> <!-- Темнее серый -->
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    </Button.Template>
+</Button>
+
 
         <!-- Нижняя панель с кнопкой -->
         <Grid Grid.Row="2">
@@ -150,14 +322,14 @@
             </Button>
         </Grid>
 
-<Button x:Name="NoDevicesButton" Content="No devices" HorizontalAlignment="Left" VerticalAlignment="Top"
-        Width="170" Height="40" Margin="610, 0, 0, 0" 
+ <Button x:Name="NoDevicesButton" Content="No devices" HorizontalAlignment="Left" VerticalAlignment="Top"
+        Width="250" Height="40" Margin="610, 0, 0, 0" 
         Style="{StaticResource WhiteButtonStyle}" Grid.Row="1"
         HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
         FontSize="14" Click="NoDevicesButton_Click">
     <Button.Template>
         <ControlTemplate TargetType="Button">
-            <Border BorderBrush="White" BorderThickness="1" Background="Black">
+            <Border x:Name="ButtonBorder" BorderBrush="White" BorderThickness="1" Background="Black">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -175,17 +347,25 @@
                     </StackPanel>
                 </Grid>
             </Border>
+            <!-- Триггеры для изменения фона -->
+            <ControlTemplate.Triggers>
+                <!-- Триггер для изменения фона при наведении -->
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="ButtonBorder" Property="Background" Value="#A9A9A9"/> <!-- Темно-серый фон при наведении -->
+                </Trigger>
+            </ControlTemplate.Triggers>
         </ControlTemplate>
     </Button.Template>
 </Button>
 
-<!-- Панель, которая появляется под кнопкой -->
-<Border x:Name="SlidePanel" Background="Black" Opacity="0.7" Width="170" 
-        HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="700, 0, 0, -140"  
+  <!-- Панель, которая появляется под кнопкой -->
+<Border x:Name="SlidePanel" Background="Black" Opacity="0.2" Width="250" 
+        HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="610, 0, 0, -70"  
         Visibility="Collapsed" Panel.ZIndex="2">
     <StackPanel x:Name="SlidePanelContent" Orientation="Vertical" />
 </Border>
-<!-- Кнопка для отображения консоли -->
+
+
 <Button x:Name="ToggleConsoleButton" 
         HorizontalAlignment="Left" VerticalAlignment="Bottom"
         Width="475" Height="40" Margin="0, 0, 400, 0" 
@@ -193,11 +373,11 @@
         Grid.Row="1" FontSize="12"
         Background="Black" Foreground="White"
         BorderBrush="Transparent" FocusVisualStyle="{x:Null}">
-    
+
     <!-- Шаблон кнопки -->
     <Button.Template>
         <ControlTemplate TargetType="Button">
-            <Border BorderBrush="Transparent" BorderThickness="1" Background="Black">
+            <Border x:Name="ButtonBorder" BorderBrush="White" BorderThickness="1" Background="Black">
                 <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
                     <!-- Вектор стрелки (вверх или вниз) -->
                     <Path x:Name="ArrowIcon" VerticalAlignment="Center" HorizontalAlignment="Center" 
@@ -205,10 +385,17 @@
                           Stretch="Uniform" Width="16" Height="16"/>
                 </Grid>
             </Border>
+
+            <!-- Триггеры для изменения фона -->
+            <ControlTemplate.Triggers>
+                <!-- Триггер для изменения фона при наведении -->
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="ButtonBorder" Property="Background" Value="#A9A9A9"/> <!-- Темно-серый фон при наведении -->
+                </Trigger>
+            </ControlTemplate.Triggers>
         </ControlTemplate>
     </Button.Template>
 </Button>
-
 
 <!-- Текстовая консоль с полупрозрачным фоном -->
 <TextBox x:Name="ConsoleTextBox" Grid.Row="1" VerticalAlignment="Bottom" 
@@ -216,5 +403,6 @@
          Background="#BF000000" Foreground="White" 
          FontFamily="Consolas" FontSize="14" TextWrapping="Wrap"
          Visibility="Collapsed" IsReadOnly="True"/>
+
     </Grid>
 </Window>
