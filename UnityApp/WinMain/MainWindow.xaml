@@ -215,7 +215,11 @@
         <!-- Ваши элементы управления -->
         <local:ChildControl1 Grid.Column="0" Margin="10" />
         <local:ChildControl2 Grid.Column="1" Margin="10" />
-        <ContentControl x:Name="ChildControlHost" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" />
+        <ContentControl x:Name="ChildControlHost"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Grid.Column="1"
+                />
         <!-- 3D надпись над ChildControl2 -->
         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0"
                    FontSize="20" FontWeight="Bold" Foreground="Black" Text="Camera"
