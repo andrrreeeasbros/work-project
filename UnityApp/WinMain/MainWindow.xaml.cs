@@ -6,7 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using DirectShowLib;
 using System.Collections.Generic;
-using OpenCvSharpWindow = OpenCvSharp.Window; // Псевдоним для OpenCvSharp.Window
+using OpenCvSharpWindow = OpenCvSharp.Window;
 using System.Windows.Media.Animation;
 
 namespace WinMain
@@ -138,55 +138,55 @@ namespace WinMain
             }
         }
 
-private bool _isAnimating = false; // Новый флаг для блокировки повторных действий
+        private bool _isAnimating = false; // Новый флаг для блокировки повторных действий
 
-private void ToggleConsoleButton_Click(object sender, RoutedEventArgs e)
-{
-    if (_isAnimating) return; // Если анимация уже выполняется, выходим
-
-    _isAnimating = true; // Устанавливаем флаг анимации
-
-    if (_isConsoleVisible)
-    {
-        // Если консоль видима, скрываем её
-        var hideAnimation = (Storyboard)FindResource("HideConsoleTextBoxAnimation");
-        hideAnimation.Completed += (s, _) =>
+        private void ToggleConsoleButton_Click(object sender, RoutedEventArgs e)
         {
-            ConsoleTextBox.Visibility = Visibility.Collapsed; // Скрываем консоль после завершения анимации
-            _isConsoleVisible = false; // Обновляем состояние
-            _isAnimating = false; // Сбрасываем флаг
-        };
-        hideAnimation.Begin(ConsoleTextBox);
+            if (_isAnimating) return; // Если анимация уже выполняется, выходим
 
-        // Меняем стрелку на кнопке
-        UpdateArrowIcon("M 0,5 L 5,0 L 10,5 Z"); // Стрелка вверх
-    }
-    else
-    {
-        // Если консоль скрыта, показываем её
-        ConsoleTextBox.Visibility = Visibility.Visible; // Делаем консоль видимой перед анимацией
-        var showAnimation = (Storyboard)FindResource("ShowConsoleTextBoxAnimation");
-        showAnimation.Completed += (s, _) =>
+            _isAnimating = true; // Устанавливаем флаг анимации
+
+            if (_isConsoleVisible)
+            {
+                // Если консоль видима, скрываем её
+                var hideAnimation = (Storyboard)FindResource("HideConsoleTextBoxAnimation");
+                hideAnimation.Completed += (s, _) =>
+                {
+                    ConsoleTextBox.Visibility = Visibility.Collapsed; // Скрываем консоль после завершения анимации
+                    _isConsoleVisible = false; // Обновляем состояние
+                    _isAnimating = false; // Сбрасываем флаг
+                };
+                hideAnimation.Begin(ConsoleTextBox);
+
+                // Меняем стрелку на кнопке
+                UpdateArrowIcon("M 0,5 L 5,0 L 10,5 Z"); // Стрелка вверх
+            }
+            else
+            {
+                // Если консоль скрыта, показываем её
+                ConsoleTextBox.Visibility = Visibility.Visible; // Делаем консоль видимой перед анимацией
+                var showAnimation = (Storyboard)FindResource("ShowConsoleTextBoxAnimation");
+                showAnimation.Completed += (s, _) =>
+                {
+                    _isConsoleVisible = true; // Обновляем состояние
+                    _isAnimating = false; // Сбрасываем флаг
+                };
+                showAnimation.Begin(ConsoleTextBox);
+
+                // Меняем стрелку на кнопке
+                UpdateArrowIcon("M 0,0 L 5,5 L 10,0 Z"); // Стрелка вниз
+            }
+        }
+
+        // Обновление иконки стрелки
+        private void UpdateArrowIcon(string data)
         {
-            _isConsoleVisible = true; // Обновляем состояние
-            _isAnimating = false; // Сбрасываем флаг
-        };
-        showAnimation.Begin(ConsoleTextBox);
-
-        // Меняем стрелку на кнопке
-        UpdateArrowIcon("M 0,0 L 5,5 L 10,0 Z"); // Стрелка вниз
-    }
-}
-
-// Обновление иконки стрелки
-private void UpdateArrowIcon(string data)
-{
-    var arrow = ToggleConsoleButton.Template.FindName("ArrowIcon", ToggleConsoleButton) as System.Windows.Shapes.Path;
-    if (arrow != null)
-    {
-        arrow.Data = Geometry.Parse(data);
-    }
-}
+            var arrow = ToggleConsoleButton.Template.FindName("ArrowIcon", ToggleConsoleButton) as System.Windows.Shapes.Path;
+            if (arrow != null)
+            {
+                arrow.Data = Geometry.Parse(data);
+            }
+        }
 
 
         private void SelectCamera(DsDevice device)
@@ -227,143 +227,139 @@ private void UpdateArrowIcon(string data)
             return -1;  // Если камера не найдена, возвращаем -1
         }
 
-// Обработчик для кнопки SecondIconButton
-private void SecondIconButton_Click(object sender, RoutedEventArgs e)
-{
-    // Создаём пользовательское окно
-    var window = new Window
-    {
-        Title = "Справочник",
-        Width = 300,
-        Height = 200,
-        WindowStartupLocation = WindowStartupLocation.CenterScreen,
-        Background = Brushes.White,
-        ResizeMode = ResizeMode.NoResize
-    };
-
-    // Основной StackPanel для содержимого
-    var panel = new StackPanel
-    {
-        Margin = new Thickness(10)
-    };
-
-    // Текст с горячими клавишами
-    var textBlock = new TextBlock
-    {
-        Text = "Горячие клавиши:\n" +
-               "Shift - Консоль\n" +
-               "Ctrl - Выбор устройства\n" +
-               "CapsLock - Выбор камеры",
-        TextWrapping = TextWrapping.Wrap,
-        FontSize = 14,
-        Margin = new Thickness(0, 0, 0, 20)
-    };
-
-    // Горизонтальная панель для кнопок
-    var buttonPanel = new StackPanel
-    {
-        Orientation = Orientation.Horizontal,
-        HorizontalAlignment = HorizontalAlignment.Center
-    };
-
-    // Кнопка "О проекте"
-    var aboutButton = new Button
-    {
-        Content = "О проекте",
-        Margin = new Thickness(0, 0, 10, 0),
-        Padding = new Thickness(10)
-    };
-
-    // Кнопка "Ok"
-    var okButton = new Button
-    {
-        Content = "Ok",
-        Padding = new Thickness(10)
-    };
-
-    // Обработчик для кнопки "О проекте"
-// Обработчик для кнопки "О проекте"
-aboutButton.Click += (s, args) =>
-{
-    try
-    {
-        // Открыть ссылку в веб-браузере
-        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+        // Обработчик для кнопки SecondIconButton
+        private void SecondIconButton_Click(object sender, RoutedEventArgs e)
         {
-            FileName = ABOUT_LINK,
-            UseShellExecute = true // Обеспечивает открытие ссылки в системе по умолчанию
-        });
-    }
-    catch (Exception ex)
-    {
-        MessageBox.Show("Не удалось открыть ссылку: " + ex.Message,
-                        "Ошибка",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Error);
-    }
-};
+            // Создаём пользовательское окно
+            var window = new Window
+            {
+                Title = "Справочник",
+                Width = 300,
+                Height = 200,
+                WindowStartupLocation = WindowStartupLocation.CenterScreen,
+                Background = Brushes.White,
+                ResizeMode = ResizeMode.NoResize
+            };
 
-    // Обработчик для кнопки "Ok"
-    okButton.Click += (s, args) => window.Close();
+            // Основной StackPanel для содержимого
+            var panel = new StackPanel
+            {
+                Margin = new Thickness(10)
+            };
 
-    // Добавляем кнопки в горизонтальную панель
-    buttonPanel.Children.Add(aboutButton);
-    buttonPanel.Children.Add(okButton);
+            // Текст с горячими клавишами
+            var textBlock = new TextBlock
+            {
+                Text = "Горячие клавиши:\n" +
+                    "Shift - Консоль\n" +
+                    "Ctrl - Выбор устройства\n" +
+                    "CapsLock - Выбор камеры",
+                TextWrapping = TextWrapping.Wrap,
+                FontSize = 14,
+                Margin = new Thickness(0, 0, 0, 20)
+            };
 
-    // Добавляем элементы в основную панель
-    panel.Children.Add(textBlock);
-    panel.Children.Add(buttonPanel);
+            // Горизонтальная панель для кнопок
+            var buttonPanel = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                HorizontalAlignment = HorizontalAlignment.Center
+            };
 
-    // Устанавливаем панель как содержимое окна
-    window.Content = panel;
+            // Кнопка "О проекте"
+            var aboutButton = new Button
+            {
+                Content = "О проекте",
+                Margin = new Thickness(0, 0, 10, 0),
+                Padding = new Thickness(10)
+            };
 
-    // Показываем окно
-    window.ShowDialog();
-}
+            // Кнопка "Ok"
+            var okButton = new Button
+            {
+                Content = "Ok",
+                Padding = new Thickness(10)
+            };
+
+            // Обработчик для кнопки "О проекте"
+        // Обработчик для кнопки "О проекте"
+        aboutButton.Click += (s, args) =>
+        {
+            try
+            {
+                // Открыть ссылку в веб-браузере
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = ABOUT_LINK,
+                    UseShellExecute = true // Обеспечивает открытие ссылки в системе по умолчанию
+                });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Не удалось открыть ссылку: " + ex.Message,
+                                "Ошибка",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Error);
+            }
+        };
+
+            // Обработчик для кнопки "Ok"
+            okButton.Click += (s, args) => window.Close();
+
+            // Добавляем кнопки в горизонтальную панель
+            buttonPanel.Children.Add(aboutButton);
+            buttonPanel.Children.Add(okButton);
+
+            // Добавляем элементы в основную панель
+            panel.Children.Add(textBlock);
+            panel.Children.Add(buttonPanel);
+
+            // Устанавливаем панель как содержимое окна
+            window.Content = panel;
+
+            // Показываем окно
+            window.ShowDialog();
+        }
 
 
-
-// Обработчик для кнопки FirstImageButton
-private void FirstImageButton_Click(object sender, RoutedEventArgs e)
-{
-    // Ваш код для обработки клика на FirstImageButton
-    MessageBox.Show("FirstImageButton clicked!");
-}
-
+        // Обработчик для кнопки FirstImageButton
+        private void FirstImageButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Ваш код для обработки клика на FirstImageButton
+            MessageBox.Show("FirstImageButton clicked!");
+        }
 
 
+        protected override void OnKeyDown(System.Windows.Input.KeyEventArgs e)
+        {
+            base.OnKeyDown(e);
 
-protected override void OnKeyDown(System.Windows.Input.KeyEventArgs e)
-{
-    base.OnKeyDown(e);
+            // Проверка, что клавиша не обрабатывается элементами ввода
+            var focusedElement = System.Windows.Input.Keyboard.FocusedElement;
+            if (focusedElement is TextBox || focusedElement is PasswordBox || focusedElement is RichTextBox)
+            {
+                // Не обрабатывать горячие клавиши, если фокус находится на элементе ввода текста
+                return;
+            }
 
-    // Проверка, что клавиша не обрабатывается элементами ввода
-    var focusedElement = System.Windows.Input.Keyboard.FocusedElement;
-    if (focusedElement is TextBox || focusedElement is PasswordBox || focusedElement is RichTextBox)
-    {
-        // Не обрабатывать горячие клавиши, если фокус находится на элементе ввода текста
-        return;
-    }
+            // Обработка горячих клавиш
+            switch (e.Key)
+            {
+                case System.Windows.Input.Key.LeftShift:
+                    ToggleConsoleButton_Click(null, null); // Переключение консоли
+                    break;
 
-    // Обработка горячих клавиш
-    switch (e.Key)
-    {
-        case System.Windows.Input.Key.LeftShift:
-            ToggleConsoleButton_Click(null, null); // Переключение консоли
-            break;
+                case System.Windows.Input.Key.LeftCtrl:
+                    NoDevicesButton_Click(null, null); // Отображение списка устройства
+                    break;
 
-        case System.Windows.Input.Key.LeftCtrl:
-            NoDevicesButton_Click(null, null); // Отображение списка устройства
-            break;
+                case System.Windows.Input.Key.CapsLock:
+                    SelectCameraButton_Click(null, null); // Выбор камер
+                    break;
 
-        case System.Windows.Input.Key.CapsLock:
-            SelectCameraButton_Click(null, null); // Выбор камер
-            break;
-
-        default:
-            break;
-    }
-}
-
+                default:
+                    break;
+            }
+        }
     }
 }

@@ -388,7 +388,7 @@
 
   <!-- Панель, которая появляется под кнопкой -->
 <Border x:Name="SlidePanel" Background="Black" Opacity="0.2" Width="250" 
-        HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="620, 0, 0, -70"  
+        HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="620, 0, 0, -110"  
         Visibility="Collapsed" Panel.ZIndex="2">
     <StackPanel x:Name="SlidePanelContent" Orientation="Vertical" />
 </Border>
