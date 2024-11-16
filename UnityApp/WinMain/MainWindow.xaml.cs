@@ -5,8 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using DirectShowLib;
-using Emgu.CV;
-
+using System.Collections.Generic;
 
 namespace WinMain
 {

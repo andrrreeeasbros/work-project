@@ -13,4 +13,7 @@
     <SourceRoot Include="C:\Users\Кот\.nuget\packages\" />
     <SourceRoot Include="G:\Visual Studio(Instr, SDK)\NuGetPackages\" />
   </ItemGroup>
+  <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <Import Project="$(NuGetPackageRoot)opencvsharp4.runtime.win\4.10.0.20241108\build\net5.0\OpenCvSharp4.runtime.win.props" Condition="Exists('$(NuGetPackageRoot)opencvsharp4.runtime.win\4.10.0.20241108\build\net5.0\OpenCvSharp4.runtime.win.props')" />
+  </ImportGroup>
 </Project>
