@@ -26,7 +26,7 @@ video_playing = False
 cap = None  # Для захвата видео
 video_length = 0  # Длина видео в кадрах
 
-# Переменная для отслеживания предыдущих координат объекта
+# Переменные для отслеживания предыдущих координат объекта
 prev_head_x = None
 prev_head_y = None
 motion_threshold = 20  # Порог для определения движения (в пикселях)
@@ -77,17 +77,23 @@ def capture_video(video_path):
             if prev_head_x is not None and prev_head_y is not None:
                 # Вычисляем расстояние между предыдущими и текущими координатами
                 dist = np.sqrt((head_x - prev_head_x) ** 2 + (head_y - prev_head_y) ** 2)
-                if dist < motion_threshold:
-                    # Если движение минимально, не обновляем 3D координаты
-                    continue
+                if dist >= motion_threshold:
+                    # Если движение превышает порог, меняем цвет на красный (объект движется)
+                    color = 'r'
+                else:
+                    # Если нет движения, оставляем синий
+                    color = 'b'
+            else:
+                # Первоначальная точка (нет предыдущих координат)
+                color = 'b'
 
             # Обновляем координаты (передаем 2D координаты в 3D)
             x_coords = np.append(x_coords[1:], head_x / canvas_width)  # Нормализуем для 3D
             y_coords = np.append(y_coords[1:], head_y / canvas_height)
             z_coords = np.append(z_coords[1:], np.random.random())
 
-            # Оставляем только синие точки
-            colors = ['b'] * len(x_coords)  # Все точки синие
+            # Оставляем только те точки, которые движутся
+            colors = [color] * len(x_coords)  # Меняем цвет точек в зависимости от движения
 
             # Обновляем минимальные и максимальные значения координат
             x_min = min(x_min, np.min(x_coords))
