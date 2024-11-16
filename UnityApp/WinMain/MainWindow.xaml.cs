@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using DirectShowLib;
 using System.Collections.Generic;
+using OpenCvSharpWindow = OpenCvSharp.Window; // Псевдоним для OpenCvSharp.Window
 
 namespace WinMain
 {
@@ -49,9 +50,9 @@ namespace WinMain
         }
         private void SelectCameraButton_Click(object sender, RoutedEventArgs e)
         {
-                // Сделать кнопки видимыми
-                Camera1Button.Visibility = Visibility.Visible;
-                Camera2Button.Visibility = Visibility.Visible;
+            // Сделать кнопки видимыми
+            Camera1Button.Visibility = Visibility.Visible;
+            Camera2Button.Visibility = Visibility.Visible;
         }
         private void ImageButton_Click(object sender, RoutedEventArgs e)
         {
@@ -98,6 +99,7 @@ namespace WinMain
                 }
             }
         }
+
         private void ToggleConsoleButton_Click(object sender, RoutedEventArgs e)
         {
             _isConsoleVisible = !_isConsoleVisible; // Переключаем состояние
@@ -122,19 +124,45 @@ namespace WinMain
             // Дополнительная логика для показа/скрытия консоли
             ConsoleTextBox.Visibility = _isConsoleVisible ? Visibility.Visible : Visibility.Collapsed;
         }
-            // Вывод названия камеры
+
+        // Вывод названия камеры
         private void SelectCamera(DsDevice device)
         {
-            SlidePanel.Visibility = Visibility.Collapsed;
+            // Устанавливаем название камеры
             NoDevicesButton.Content = device.Name;
-            
-        // Передаем устройство в ChildControl2
-        // if (ChildControlHost.Content is ChildControl2 childControl)
-        // {
-        //     childControl.StartCameraStream(device);
-        // }
+            SlidePanel.Visibility = Visibility.Collapsed;
 
-            MessageBox.Show($"Выбрана камера: {device.Name}");
+            int cameraIndex = GetCameraIndex(device.Name);
+
+            // Проверяем, что ContentControl уже содержит нужный элемент
+            if (ChildControlHost.Content == null || !(ChildControlHost.Content is ChildControl2))
+            {
+                // Создаем новый экземпляр ChildControl2
+                ChildControlHost.Content = new ChildControl2();
+            }
+
+            // Если в ContentHost находится ChildControl2, вызываем метод для потока камеры
+            if (ChildControlHost.Content is ChildControl2 childControl)
+            {
+                childControl.StartCameraStream(cameraIndex);
+            }
+            else
+            {
+                MessageBox.Show("Ошибка: не удалось найти нужный элемент.");
+            }
         }
+        private int GetCameraIndex(string deviceName)
+        {
+            var devices = DsDevice.GetDevicesOfCat(FilterCategory.VideoInputDevice);
+            for (int i = 0; i < devices.Length; i++)
+            {
+                if (devices[i].Name == deviceName)
+                {
+                    return i;  // Возвращаем индекс камеры
+                }
+            }
+            return -1;  // Если камера не найдена, возвращаем -1
+        }
+
     }
 }

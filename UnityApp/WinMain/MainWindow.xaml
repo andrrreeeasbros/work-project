@@ -108,9 +108,9 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-
             <local:ChildControl1 Grid.Column="0" Margin="10" />
             <local:ChildControl2 Grid.Column="1" Margin="10" />
+            <ContentControl x:Name="ChildControlHost" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" />
         </Grid>
 
         <!-- Кнопка "Выберите камеру" -->
@@ -209,7 +209,6 @@
     </Button.Template>
 </Button>
 
-
 <!-- Текстовая консоль с полупрозрачным фоном -->
 <TextBox x:Name="ConsoleTextBox" Grid.Row="1" VerticalAlignment="Bottom" 
          Margin="0, 0, 719, 38" Height="125" Width="475"
@@ -217,4 +216,5 @@
          FontFamily="Consolas" FontSize="14" TextWrapping="Wrap"
          Visibility="Collapsed" IsReadOnly="True"/>
     </Grid>
+    
 </Window>

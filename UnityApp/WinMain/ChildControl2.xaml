@@ -4,6 +4,11 @@
              Height="300" Width="650">
     <Grid Background="LightBlue">
         <!-- Видео на заднем фоне с отключенным звуком -->
+        <Image Name="BackgroundImage" 
+            Visibility="Visible"
+            Stretch="Fill"       
+         />
+               
         <MediaElement Name="BackgroundVideo" 
                       Source="img/nosignal.mp4"   
                       Stretch="Fill"       
@@ -11,6 +16,8 @@
                       VerticalAlignment="Stretch"
                       MediaEnded="BackgroundVideo_MediaEnded"
                       IsMuted="True"
-                      LoadedBehavior="Manual" />  <!-- Устанавливаем Manual для управления воспроизведением -->
+                      Visibility="Visible"
+                      LoadedBehavior="Manual"
+                      UnloadedBehavior="Stop" /> 
     </Grid>
 </UserControl>
