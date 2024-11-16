@@ -107,7 +107,7 @@ def capture_video(video_path):
             prev_head_x, prev_head_y = head_x, head_y
 
         # Масштабируем кадр, чтобы он помещался в холст
-        frame_resized = cv2.resize(frame, (canvas_width, canvas_height))
+        frame_resized = cv2.resize(frame, (canvas.winfo_width(), canvas.winfo_height()))
 
         # Преобразуем изображение в формат для Tkinter
         frame_rgb = cv2.cvtColor(frame_resized, cv2.COLOR_BGR2RGB)
@@ -189,6 +189,7 @@ def update_video_position(val):
                 frame_rgb = cv2.cvtColor(frame_resized, cv2.COLOR_BGR2RGB)
                 frame_img = Image.fromarray(frame_rgb)
                 frame_tk = ImageTk.PhotoImage(image=frame_img)
+                # Обновляем изображение в Canvas
                 canvas.create_image(0, 0, anchor=tk.NW, image=frame_tk)
                 canvas.image = frame_tk  # Сохраняем ссылку на изображение, чтобы оно не исчезло
 
@@ -221,13 +222,17 @@ video_path_label.pack(side=tk.LEFT)
 video_path_entry = tk.Entry(frame_controls, width=60)
 video_path_entry.pack(side=tk.LEFT, padx=10)
 
-# Ползунок для перемотки видео
-scale_video = tk.Scale(frame_controls, from_=0, to=100, orient=tk.HORIZONTAL, length=600, command=update_video_position)
-scale_video.pack(side=tk.TOP, fill=tk.X)
-
 # Окно видео
 frame_video = tk.Frame(window)
 frame_video.pack(side=tk.LEFT, padx=20, pady=10)
+
+# Панель с ползунком для перемотки видео (над видео)
+frame_slider = tk.Frame(frame_video)
+frame_slider.pack(side=tk.TOP, fill=tk.X, pady=5)
+
+# Ползунок для перемотки видео
+scale_video = tk.Scale(frame_slider, from_=0, to=100, orient=tk.HORIZONTAL, length=600, command=update_video_position)
+scale_video.pack(side=tk.LEFT, fill=tk.X)
 
 canvas = tk.Canvas(frame_video, width=700, height=500)
 canvas.pack(fill=tk.BOTH, expand=True)  # Подстраиваем холст под размер окна
@@ -238,12 +243,6 @@ frame_data.pack(side=tk.BOTTOM, fill=tk.X, padx=10, pady=10)
 
 label_coordinates = tk.Label(frame_data, text="X: -- | Y: -- | Z: --", font=("Arial", 14))
 label_coordinates.pack(side=tk.LEFT, padx=10)
-
-label_speed = tk.Label(frame_data, text="Speed: -- m/s", font=("Arial", 14))
-label_speed.pack(side=tk.LEFT, padx=10)
-
-label_direction = tk.Label(frame_data, text="Direction: --°", font=("Arial", 14))
-label_direction.pack(side=tk.LEFT, padx=10)
 
 # Панель 3D визуализации
 frame_3d = tk.Frame(window)
