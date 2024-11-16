@@ -5,3 +5,7 @@ env/
 # Игнорирование скомпилированных Python файлов
 *.pyc
 *.pyo
+
+theory.txt
+
+__pycache__/
