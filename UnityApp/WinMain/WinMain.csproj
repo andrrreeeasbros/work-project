@@ -13,6 +13,11 @@
 </ItemGroup>
 
 
+<ItemGroup>
+    <Resource Include="img/pngwing.com (2).png" />
+</ItemGroup>
+
+
   <ItemGroup>
     <!-- Видео -->
     <Content Include="img/nosignal.mp4">

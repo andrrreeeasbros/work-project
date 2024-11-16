@@ -309,25 +309,49 @@
 </Button>
 
 
-        <!-- Нижняя панель с кнопкой -->
-        <Grid Grid.Row="2">
-            <Button x:Name="GearButton" HorizontalAlignment="Right"
-                    VerticalAlignment="Bottom"
-                    Click="ImageButton_Click"
-                    Style="{StaticResource GearButtonStyle}">
+<Grid Grid.Row="2">
+    <Grid HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="10"/> <!-- Промежуток -->
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
 
-                <Button.Template>
-                    <ControlTemplate TargetType="Button">
-                        <Image Source="img/pngwing.com (1).png" 
-                               Stretch="Fill" 
-                               Opacity="1"/>
-                    </ControlTemplate>
-                </Button.Template>
-            </Button>
-        </Grid>
+        <!-- Первая кнопка с новой иконкой -->
+        <Button x:Name="SecondIconButton" 
+                Grid.Column="0"
+                Width="60" Height="60"
+                Click="SecondIconButton_Click" 
+                Style="{StaticResource GearButtonStyle}">
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <Image Source="img/pngwing.com (2).png" 
+                           Stretch="Fill" 
+                           Opacity="1"/>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+
+        <!-- Вторая кнопка с новой иконкой -->
+        <Button x:Name="FirstIconButton" 
+                Grid.Column="2"
+                Width="50" Height="50"
+                Click="FirstImageButton_Click" 
+                Style="{StaticResource GearButtonStyle}">
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <Image Source="img/pngwing.com (1).png" 
+                           Stretch="Fill" 
+                           Opacity="1"/>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+    </Grid>
+</Grid>
+
 
  <Button x:Name="NoDevicesButton" Content="No devices" HorizontalAlignment="Left" VerticalAlignment="Top"
-        Width="250" Height="40" Margin="610, 0, 0, 0" 
+        Width="250" Height="40" Margin="620, 0, 0, 0" 
         Style="{StaticResource WhiteButtonStyle}" Grid.Row="1"
         HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
         FontSize="14" Click="NoDevicesButton_Click">
@@ -364,7 +388,7 @@
 
   <!-- Панель, которая появляется под кнопкой -->
 <Border x:Name="SlidePanel" Background="Black" Opacity="0.2" Width="250" 
-        HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="610, 0, 0, -100"  
+        HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="620, 0, 0, -70"  
         Visibility="Collapsed" Panel.ZIndex="2">
     <StackPanel x:Name="SlidePanelContent" Orientation="Vertical" />
 </Border>
@@ -385,7 +409,7 @@
                 <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
                     <!-- Вектор стрелки (вверх или вниз) -->
                     <Path x:Name="ArrowIcon" VerticalAlignment="Center" HorizontalAlignment="Center" 
-                          Fill="White" Data="M 0,5 L 5,0 L 10,5 Z" 
+                          Fill="White" Data="M 0,0 L 5,5 L 10,0 Z" 
                           Stretch="Uniform" Width="16" Height="16"/>
                 </Grid>
             </Border>
@@ -406,8 +430,12 @@
          Margin="0, 0, 719, 38" Height="125" Width="475"
          Background="#BF000000" Foreground="White" 
          FontFamily="Consolas" FontSize="14" TextWrapping="Wrap"
-         Visibility="Collapsed" IsReadOnly="True"/>
+         Visibility="Visible" IsReadOnly="True"/>
 
     </Grid>
+
+
+
+    
     
 </Window>
