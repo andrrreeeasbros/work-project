@@ -31,10 +31,10 @@ prev_head_x = None
 prev_head_y = None
 motion_threshold = 20  # Порог для определения движения (в пикселях)
 
-# Функция для захвата видео и отслеживания объекта
 def capture_video(video_path):
     global x_coords, y_coords, z_coords, x_min, x_max, y_min, y_max, z_min, z_max, cap, video_playing, colors, video_length  # Обновляем глобальные переменные
-    global prev_head_x, prev_head_y  # Добавляем переменные для отслеживания предыдущих координат
+    global prev_head_x, prev_head_y, prev_head_frame  # Добавляем переменную для отслеживания предыдущего кадра
+    global motion_threshold, motion_counter, max_static_frames  # Обновляем переменные для контроля за движением
 
     cap = cv2.VideoCapture(video_path)  # Открытие видеофайла
 
@@ -56,6 +56,10 @@ def capture_video(video_path):
     scale_video.config(to=video_length - 1, sliderlength=20, length=600)
 
     video_playing = True  # Устанавливаем флаг видео в состояние "играет"
+    
+    motion_counter = 0  # Счётчик кадров, в которых не было движения
+    max_static_frames = 10  # Максимум кадров без движения перед игнорированием объекта
+
     while video_playing:
         ret, frame = cap.read()
         if not ret:
@@ -67,7 +71,7 @@ def capture_video(video_path):
 
         for (x, y, w, h) in boxes:
             # Нарисовать прямоугольник вокруг обнаруженного человека
-            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)  # Зеленый прямоугольник
 
             # Центр головы (верхняя часть прямоугольника)
             head_x = x + w // 2
@@ -77,22 +81,32 @@ def capture_video(video_path):
             if prev_head_x is not None and prev_head_y is not None:
                 # Вычисляем расстояние между предыдущими и текущими координатами
                 dist = np.sqrt((head_x - prev_head_x) ** 2 + (head_y - prev_head_y) ** 2)
+                
+                # Если движение превышает порог, обновляем положение объекта
                 if dist >= motion_threshold:
-                    # Если движение превышает порог, меняем цвет на красный (объект движется)
-                    color = 'r'
+                    color = 'r'  # Если есть движение, устанавливаем красный цвет
+                    # Сбрасываем счётчик статичных кадров
+                    motion_counter = 0
+                    # Обновляем координаты
+                    x_coords = np.append(x_coords[1:], head_x / canvas_width)
+                    y_coords = np.append(y_coords[1:], head_y / canvas_height)
+                    z_coords = np.append(z_coords[1:], np.random.random())
                 else:
-                    # Если нет движения, оставляем синий
-                    color = 'b'
+                    color = 'b'  # Если движения нет, ставим синий цвет
+                    motion_counter += 1
+                    # Проверка на слишком много кадров без движения
+                    if motion_counter > max_static_frames:
+                        # Если слишком долго не было движения, игнорируем координаты
+                        continue
             else:
                 # Первоначальная точка (нет предыдущих координат)
                 color = 'b'
+                # Обновляем координаты только один раз при первой детекции
+                x_coords = np.append(x_coords[1:], head_x / canvas_width)
+                y_coords = np.append(y_coords[1:], head_y / canvas_height)
+                z_coords = np.append(z_coords[1:], np.random.random())
 
-            # Обновляем координаты (передаем 2D координаты в 3D)
-            x_coords = np.append(x_coords[1:], head_x / canvas_width)  # Нормализуем для 3D
-            y_coords = np.append(y_coords[1:], head_y / canvas_height)
-            z_coords = np.append(z_coords[1:], np.random.random())
-
-            # Оставляем только те точки, которые движутся
+            # Обновляем цвета точек
             colors = [color] * len(x_coords)  # Меняем цвет точек в зависимости от движения
 
             # Обновляем минимальные и максимальные значения координат
@@ -112,6 +126,12 @@ def capture_video(video_path):
             # Обновляем предыдущие координаты
             prev_head_x, prev_head_y = head_x, head_y
 
+            # Отображаем координаты объекта на видео, если это движущийся объект (красный)
+            if color == 'r':
+                # Текст с координатами
+                coord_text = f"({head_x}, {head_y})"
+                cv2.putText(frame, coord_text, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2, cv2.LINE_AA)
+
         # Масштабируем кадр, чтобы он помещался в холст
         frame_resized = cv2.resize(frame, (canvas.winfo_width(), canvas.winfo_height()))
 
@@ -129,7 +149,8 @@ def capture_video(video_path):
 
     cap.release()
 
-# Функция для отображения 3D графика с полосой
+
+
 def plot_3d_coordinates():
     global x_coords, y_coords, z_coords, scatter_plot, ax, fig, x_min, x_max, y_min, y_max, z_min, z_max, colors
 
@@ -147,16 +168,29 @@ def plot_3d_coordinates():
         ax.set_ylim([y_min, y_max])
         ax.set_zlim([z_min, z_max])
 
+        # Создаем 3D холст в Tkinter
         canvas_3d = FigureCanvasTkAgg(fig, master=frame_3d)
         canvas_3d.draw()
         canvas_3d.get_tk_widget().pack()
+
+        # Показываем контейнер с координатами (когда 3D график появляется)
+        frame_tracking_info.pack(side=tk.TOP, fill=tk.X, pady=5)
     else:
+        # Обновляем 3D график, если он уже был создан
         scatter_plot._offsets3d = (x_coords, y_coords, z_coords)
         scatter_plot.set_color(colors)  # Обновляем цвета точек
         ax.set_xlim([x_min, x_max])
         ax.set_ylim([y_min, y_max])
         ax.set_zlim([z_min, z_max])
         fig.canvas.draw_idle()
+
+    # Обновляем координаты, отображаем контейнер с координатами
+    if x_coords.size > 0:  # Если есть хотя бы одна точка, показываем координаты
+        label_coordinates.config(text=f"X: {x_coords[-1]:.2f} | Y: {y_coords[-1]:.2f} | Z: {z_coords[-1]:.2f}")
+        frame_tracking_info.pack(side=tk.TOP, fill=tk.X, pady=5)
+    else:
+        # Скрываем контейнер с координатами, если нет данных
+        frame_tracking_info.pack_forget()
 
 video_playing = False  # глобальная переменная для отслеживания состояния воспроизведения
 
@@ -193,6 +227,7 @@ def continue_video():
 # Функция для перемотки видео при изменении ползунка
 def update_video_position(val):
     if cap and cap.isOpened():
+        # Перемещаем видео на указанный кадр
         cap.set(cv2.CAP_PROP_POS_FRAMES, int(val))
         if video_playing:
             ret, frame = cap.read()
@@ -207,6 +242,25 @@ def update_video_position(val):
                 canvas.create_image(0, 0, anchor=tk.NW, image=frame_tk)
                 canvas.image = frame_tk  # Сохраняем ссылку на изображение, чтобы оно не исчезло
 
+            # Обновляем метку времени
+            frame_pos = int(val)  # Текущая позиция в кадрах
+            time_display = convert_frames_to_time(frame_pos)
+            label_time.config(text=f"Time: {time_display}")
+
+def convert_frames_to_time(frame_num):
+    # Получаем FPS (frames per second) видео
+    fps = cap.get(cv2.CAP_PROP_FPS)
+    
+    # Рассчитываем время на основе номера кадра
+    seconds = int(frame_num / fps)
+    hours = seconds // 3600
+    minutes = (seconds % 3600) // 60
+    seconds = seconds % 60
+
+    # Возвращаем время в формате "HH:MM:SS"
+    return f"{hours:02}:{minutes:02}:{seconds:02}"
+
+
 # Функция для выбора видеофайла через диалоговое окно
 def browse_video():
     file_path = filedialog.askopenfilename(filetypes=[("Video Files", "*.mp4 *.avi *.mov *.mkv")])
@@ -214,6 +268,21 @@ def browse_video():
         video_path_entry.delete(0, tk.END)  # Очистить текущее значение
         video_path_entry.insert(0, file_path)  # Вставить выбранный путь
         browse_button.config(bg='#f0ad4e', fg='white', relief=tk.RAISED, bd=2)  # Изменяем стиль кнопки
+
+
+def change_video():
+    # Проверка, если путь к видео не указан
+    if not video_path_entry.get():  # Если поле пути пустое
+        messagebox.showerror("Ошибка", "Путь не добавлен. Нечего менять!")
+        return  # Прерываем выполнение функции
+    
+    file_path = filedialog.askopenfilename(filetypes=[("Video Files", "*.mp4 *.avi *.mov *.mkv")])
+    if file_path:
+        video_path_entry.delete(0, tk.END)  # Очистить текущее значение
+        video_path_entry.insert(0, file_path)  # Вставить выбранный путь
+        browse_button.config(bg='#f0ad4e', fg='white', relief=tk.RAISED, bd=2)  # Изменяем стиль кнопки Browse
+        start_button.config(text="Start", bg='#28a745', fg='white', relief=tk.RAISED, bd=2)  # Сменить текст на Start
+
 
 # Функция для выхода из программы
 def exit_program():
@@ -323,12 +392,18 @@ frame_buttons = tk.Frame(window, bg='#343a40')  # Новый контейнер 
 frame_buttons.pack(side=tk.TOP, anchor="w", padx=20, pady=10)
 
 # Кнопка для старта/остановки видео
-start_button = tk.Button(frame_buttons, text="Start", command=toggle_video)
+# Кнопка для старта/остановки видео
+start_button = tk.Button(frame_buttons, text="Start", command=toggle_video, bg='#28a745', fg='white', relief=tk.RAISED, bd=4, width=12)
 start_button.pack(side=tk.LEFT, padx=10)
 
 # Кнопка для выбора видеофайла
-browse_button = tk.Button(frame_buttons, text="Browse", command=browse_video)
+browse_button = tk.Button(frame_buttons, text="Browse", command=browse_video, bg='#ffc107', fg='black', relief=tk.RAISED, bd=4, width=12)
 browse_button.pack(side=tk.LEFT, padx=10)
+
+# Кнопка для изменения видео
+change_button = tk.Button(frame_buttons, text="Change Video", command=change_video, bg='#17a2b8', fg='white', relief=tk.RAISED, bd=4, width=15)
+change_button.pack(side=tk.LEFT, padx=10)
+
 
 # Контейнер для поля ввода пути с голубым фоном
 frame_video_path = tk.Frame(window, bg='#f0f8ff', bd=2, relief=tk.RAISED)  # Новый контейнер для пути
@@ -391,3 +466,5 @@ style_video_path_container()  # Применение стиля для конт�
 
 # Запуск интерфейса
 window.mainloop()
+
+
