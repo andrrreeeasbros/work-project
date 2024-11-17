@@ -27,12 +27,13 @@ cap = None  # Для захвата видео
 video_length = 0  # Длина видео в кадрах
 
 # Переменные для отслеживания предыдущих координат объекта
-prev_head_coords = {}  # Словарь для отслеживания координат каждого объекта
+prev_head_x = None
+prev_head_y = None
 motion_threshold = 20  # Порог для определения движения (в пикселях)
 
 def capture_video(video_path):
     global x_coords, y_coords, z_coords, x_min, x_max, y_min, y_max, z_min, z_max, cap, video_playing, colors, video_length  # Обновляем глобальные переменные
-    global prev_head_coords  # Используем словарь для отслеживания координат
+    global prev_head_x, prev_head_y, prev_head_frame  # Добавляем переменную для отслеживания предыдущего кадра
     global motion_threshold, motion_counter, max_static_frames  # Обновляем переменные для контроля за движением
 
     cap = cv2.VideoCapture(video_path)  # Открытие видеофайла
@@ -68,7 +69,7 @@ def capture_video(video_path):
         # Детекция людей на изображении
         boxes, weights = hog.detectMultiScale(frame, winStride=(8, 8), padding=(8, 8), scale=1.05)
 
-        for idx, (x, y, w, h) in enumerate(boxes):
+        for (x, y, w, h) in boxes:
             # Нарисовать прямоугольник вокруг обнаруженного человека
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)  # Зеленый прямоугольник
 
@@ -76,32 +77,37 @@ def capture_video(video_path):
             head_x = x + w // 2
             head_y = y
 
-            # Проверяем, есть ли движение для текущего объекта
-            if idx not in prev_head_coords:
-                # Если это первый кадр для объекта, сохраняем его координаты и присваиваем синий цвет
-                prev_head_coords[idx] = (head_x, head_y)
-                colors[idx] = 'b'
-            else:
-                prev_x, prev_y = prev_head_coords[idx]
+            # Проверяем, есть ли движение
+            if prev_head_x is not None and prev_head_y is not None:
                 # Вычисляем расстояние между предыдущими и текущими координатами
-                dist = np.sqrt((head_x - prev_x) ** 2 + (head_y - prev_y) ** 2)
+                dist = np.sqrt((head_x - prev_head_x) ** 2 + (head_y - prev_head_y) ** 2)
                 
-                # Если движение превышает порог, обновляем цвет на красный
+                # Если движение превышает порог, обновляем положение объекта
                 if dist >= motion_threshold:
-                    colors[idx] = 'r'  # Если есть движение, устанавливаем красный цвет
+                    color = 'r'  # Если есть движение, устанавливаем красный цвет
+                    # Сбрасываем счётчик статичных кадров
+                    motion_counter = 0
                     # Обновляем координаты
                     x_coords = np.append(x_coords[1:], head_x / canvas_width)
                     y_coords = np.append(y_coords[1:], head_y / canvas_height)
                     z_coords = np.append(z_coords[1:], np.random.random())
                 else:
-                    colors[idx] = 'b'  # Если движения нет, ставим синий цвет
-                    # Обновляем координаты для статичной точки
-                    x_coords = np.append(x_coords[1:], head_x / canvas_width)
-                    y_coords = np.append(y_coords[1:], head_y / canvas_height)
-                    z_coords = np.append(z_coords[1:], np.random.random())
+                    color = 'b'  # Если движения нет, ставим синий цвет
+                    motion_counter += 1
+                    # Проверка на слишком много кадров без движения
+                    if motion_counter > max_static_frames:
+                        # Если слишком долго не было движения, игнорируем координаты
+                        continue
+            else:
+                # Первоначальная точка (нет предыдущих координат)
+                color = 'b'
+                # Обновляем координаты только один раз при первой детекции
+                x_coords = np.append(x_coords[1:], head_x / canvas_width)
+                y_coords = np.append(y_coords[1:], head_y / canvas_height)
+                z_coords = np.append(z_coords[1:], np.random.random())
 
-                # Обновляем координаты объекта в словаре
-                prev_head_coords[idx] = (head_x, head_y)
+            # Обновляем цвета точек
+            colors = [color] * len(x_coords)  # Меняем цвет точек в зависимости от движения
 
             # Обновляем минимальные и максимальные значения координат
             x_min = min(x_min, np.min(x_coords))
@@ -116,6 +122,15 @@ def capture_video(video_path):
 
             # Обновляем 3D график
             plot_3d_coordinates()
+
+            # Обновляем предыдущие координаты
+            prev_head_x, prev_head_y = head_x, head_y
+
+            # Отображаем координаты объекта на видео, если это движущийся объект (красный)
+            if color == 'r':
+                # Текст с координатами
+                coord_text = f"({head_x}, {head_y})"
+                cv2.putText(frame, coord_text, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2, cv2.LINE_AA)
 
         # Масштабируем кадр, чтобы он помещался в холст
         frame_resized = cv2.resize(frame, (canvas.winfo_width(), canvas.winfo_height()))
@@ -133,6 +148,8 @@ def capture_video(video_path):
         window.update()
 
     cap.release()
+
+
 
 def plot_3d_coordinates():
     global x_coords, y_coords, z_coords, scatter_plot, ax, fig, x_min, x_max, y_min, y_max, z_min, z_max, colors
@@ -198,11 +215,6 @@ def stop_video():
     global video_playing
     video_playing = False
     start_button.config(text='Continue', bg='#5bc0de', fg='white', relief=tk.RAISED, bd=2)  # Кнопка "Continue" голубая
-    
-    # Обновляем метку времени на текущее время, когда видео остановлено
-    current_frame = int(cap.get(cv2.CAP_PROP_POS_FRAMES))  # Получаем текущий кадр
-    time_display = convert_frames_to_time(current_frame)
-    label_time.config(text=f"Time: {time_display}")
 
 # Функция для продолжения видео
 def continue_video():
@@ -232,9 +244,8 @@ def update_video_position(val):
 
             # Обновляем метку времени
             frame_pos = int(val)  # Текущая позиция в кадрах
-            time_display = convert_frames_to_time(frame_pos)  # Переводим кадры в время
+            time_display = convert_frames_to_time(frame_pos)
             label_time.config(text=f"Time: {time_display}")
-
 
 def convert_frames_to_time(frame_num):
     # Получаем FPS (frames per second) видео
@@ -248,7 +259,6 @@ def convert_frames_to_time(frame_num):
 
     # Возвращаем время в формате "HH:MM:SS"
     return f"{hours:02}:{minutes:02}:{seconds:02}"
-
 
 
 # Функция для выбора видеофайла через диалоговое окно
