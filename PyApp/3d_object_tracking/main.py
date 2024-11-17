@@ -392,7 +392,6 @@ frame_buttons = tk.Frame(window, bg='#343a40')  # Новый контейнер 
 frame_buttons.pack(side=tk.TOP, anchor="w", padx=20, pady=10)
 
 # Кнопка для старта/остановки видео
-# Кнопка для старта/остановки видео
 start_button = tk.Button(frame_buttons, text="Start", command=toggle_video, bg='#28a745', fg='white', relief=tk.RAISED, bd=4, width=12)
 start_button.pack(side=tk.LEFT, padx=10)
 
@@ -423,11 +422,15 @@ exit_button.place(relx=1.0, rely=0.0, anchor='ne', x=-10, y=60)
 
 # Окно видео
 frame_video = tk.Frame(window)
-frame_video.pack(side=tk.LEFT, padx=20, pady=10)
+frame_video.pack(side=tk.LEFT, padx=20, pady=10)  # Убираем лишние отступы
+
+# Подпись над видео
+video_label = tk.Label(frame_video, text="Video", font=("Arial", 12, 'bold'), bg='#f0f8ff', fg='black')
+video_label.pack(side=tk.TOP, fill=tk.X, pady=5)
 
 # Панель с ползунком для перемотки видео (над видео)
 frame_slider = tk.Frame(frame_video)
-frame_slider.pack(side=tk.TOP, fill=tk.X, pady=5)
+frame_slider.pack(side=tk.TOP, fill=tk.X, pady=5)  # Убираем лишние отступы
 
 # Ползунок для перемотки видео
 scale_video = tk.Scale(frame_slider, from_=0, to=100, orient=tk.HORIZONTAL, length=600, command=update_video_position)
@@ -439,6 +442,10 @@ canvas.pack(fill=tk.BOTH, expand=True)  # Подстраиваем холст п
 # Панель 3D визуализации
 frame_3d = tk.Frame(window)
 frame_3d.pack(side=tk.RIGHT, padx=20, pady=10)
+
+# Подпись над визуализатором
+visualizer_label = tk.Label(frame_3d, text="SpaceVisualizer", font=("Arial", 12, 'bold'), bg='#f0f8ff', fg='black')
+visualizer_label.pack(side=tk.TOP, fill=tk.X, pady=5)
 
 # Переносим блок с метками координат и статусом в frame_3d
 frame_tracking_info = tk.Frame(frame_3d, bg='#f0f8ff')  # Теперь контейнер для информации о статусе и координатах будет внутри frame_3d
