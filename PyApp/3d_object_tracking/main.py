@@ -26,7 +26,7 @@ video_playing = False
 cap = None  # Для захвата видео
 video_length = 0  # Длина видео в кадрах
 
-# Переменная для отслеживания предыдущих координат объекта
+# Переменные для отслеживания предыдущих координат объекта
 prev_head_x = None
 prev_head_y = None
 motion_threshold = 20  # Порог для определения движения (в пикселях)
@@ -77,17 +77,23 @@ def capture_video(video_path):
             if prev_head_x is not None and prev_head_y is not None:
                 # Вычисляем расстояние между предыдущими и текущими координатами
                 dist = np.sqrt((head_x - prev_head_x) ** 2 + (head_y - prev_head_y) ** 2)
-                if dist < motion_threshold:
-                    # Если движение минимально, не обновляем 3D координаты
-                    continue
+                if dist >= motion_threshold:
+                    # Если движение превышает порог, меняем цвет на красный (объект движется)
+                    color = 'r'
+                else:
+                    # Если нет движения, оставляем синий
+                    color = 'b'
+            else:
+                # Первоначальная точка (нет предыдущих координат)
+                color = 'b'
 
             # Обновляем координаты (передаем 2D координаты в 3D)
             x_coords = np.append(x_coords[1:], head_x / canvas_width)  # Нормализуем для 3D
             y_coords = np.append(y_coords[1:], head_y / canvas_height)
             z_coords = np.append(z_coords[1:], np.random.random())
 
-            # Оставляем только синие точки
-            colors = ['b'] * len(x_coords)  # Все точки синие
+            # Оставляем только те точки, которые движутся
+            colors = [color] * len(x_coords)  # Меняем цвет точек в зависимости от движения
 
             # Обновляем минимальные и максимальные значения координат
             x_min = min(x_min, np.min(x_coords))
@@ -152,11 +158,20 @@ def plot_3d_coordinates():
         ax.set_zlim([z_min, z_max])
         fig.canvas.draw_idle()
 
-# Функция для старта и остановки видео
+video_playing = False  # глобальная переменная для отслеживания состояния воспроизведения
+
+# Функция для начала/остановки видео
 def toggle_video():
+    global video_playing
     video_path = video_path_entry.get()  # Получаем путь к видео из текстового поля
-    if video_path and not video_playing:
-        start_button.config(text='Stop')
+
+    # Проверка, добавлен ли путь к видео
+    if not video_path:
+        messagebox.showerror("Ошибка", "Вы не добавили видео. Пожалуйста, выберите файл видео.")
+        return
+
+    if not video_playing:
+        start_button.config(text='Stop', bg='#d9534f', fg='white', relief=tk.RAISED, bd=2)  # Красная кнопка
         capture_video(video_path)  # Запуск захвата видео
     elif video_playing:
         stop_video()
@@ -165,14 +180,13 @@ def toggle_video():
 def stop_video():
     global video_playing
     video_playing = False
-    start_button.config(text='Continue')  # Меняем текст на кнопке на "Continue"
+    start_button.config(text='Continue', bg='#5bc0de', fg='white', relief=tk.RAISED, bd=2)  # Кнопка "Continue" голубая
 
 # Функция для продолжения видео
 def continue_video():
     global video_playing
     video_playing = True
-    start_button.config(text='Stop')  # Меняем текст на кнопке на "Stop"
-    # Если видео не было загружено, то загружаем
+    start_button.config(text='Stop', bg='#d9534f', fg='white', relief=tk.RAISED, bd=2)  # Кнопка "Stop" красная
     video_path = video_path_entry.get()
     capture_video(video_path)  # Продолжаем воспроизведение
 
@@ -199,28 +213,138 @@ def browse_video():
     if file_path:
         video_path_entry.delete(0, tk.END)  # Очистить текущее значение
         video_path_entry.insert(0, file_path)  # Вставить выбранный путь
+        browse_button.config(bg='#f0ad4e', fg='white', relief=tk.RAISED, bd=2)  # Изменяем стиль кнопки
 
-# Инициализация окна
+# Функция для выхода из программы
+def exit_program():
+    if messagebox.askokcancel("Выход", "Вы уверены, что хотите выйти?"):
+        window.quit()
+
+def style_controls():
+    # Стилизация кнопок
+    start_button.config(
+        font=("Arial", 12, 'bold'),
+        bg='#28a745',  # Зелёный цвет для кнопки Start
+        fg='white', 
+        relief=tk.RAISED, 
+        bd=2,
+        width=12
+    )
+    browse_button.config(
+        font=("Arial", 12, 'bold'),
+        bg='#ffc107',  # Желтый для кнопки Browse
+        fg='black',
+        relief=tk.RAISED,
+        bd=2,
+        width=12
+    )
+    
+    # Стилизация кнопки Exit
+    exit_button.config(
+        font=("Arial", 12, 'bold'),
+        bg='#dc3545',  # Красный цвет для кнопки Exit
+        fg='white',
+        relief=tk.RAISED,
+        bd=2,
+        width=12
+    )
+    
+    # Стилизация полей ввода
+    video_path_entry.config(
+        font=("Arial", 12, 'bold'),  # Жирный шрифт для текста
+        relief=tk.SUNKEN,
+        bd=2,
+        width=50,
+        fg="black",  # Черный цвет текста
+        bg="#f4f4f4"  # Светлый фон для поля ввода
+    )
+    video_path_label.config(
+        font=("Arial", 12, 'bold'),
+        bg='#007bff',  # Синий фон для метки
+        fg='white'  # Белый цвет текста для контраста
+    )
+
+def style_video_path_container():
+    # Стилизация контейнера для пути (синий фон)
+    frame_video_path.config(
+        bg='#007bff',  # Синий цвет для контейнера
+        bd=2,
+        relief=tk.RAISED
+    )
+
+def style_slider():
+    scale_video.config(
+        bg='#f8f9fa', 
+        sliderlength=20, 
+        width=20, 
+        relief=tk.FLAT, 
+        bd=0,
+        troughcolor="#e0e0e0"  # Светлый цвет канала ползунка
+    )
+
+def style_coordinates():
+    label_coordinates.config(
+        font=("Arial", 14, 'bold'),
+        bg='#f8f9fa',
+        fg='#495057',  # Темно-серый для текста координат
+        anchor='w',
+        padx=10
+    )
+
+def style_3d_plot():
+    frame_3d.config(bg='#f0f8ff', padx=20, pady=20)  # Светло-голубой фон для панели 3D
+    status_label.config(
+        font=("Arial", 12, 'bold'),
+        fg="#28a745",  # Зеленый цвет для активного статуса
+        bg="#f0f8ff",
+        anchor="w"
+    )
+
+# Инициализация интерфейса
 window = tk.Tk()
 window.title("3D Object Tracking System")
 
-# Панель управления
-frame_controls = tk.Frame(window)
-frame_controls.pack(side=tk.TOP, fill=tk.X, padx=10, pady=10)
+# Основной фон окна
+window.config(bg='#343a40')  # Темно-серый фон для всего окна
+
+frame_title = tk.Frame(window, bg='#343a40')  # Панель с темным фоном для заголовка
+frame_title.pack(side=tk.TOP, fill=tk.X, pady=10)
+
+# Заголовок 
+title_label = tk.Label(window, text="Приложение N2", font=("Arial", 24, 'bold'), fg='#ff4500', bg='#343a40')
+title_label.pack(side=tk.TOP, pady=(0, 10))  # Паддинг, чтобы отодвинуть немного вниз
+
+# Панель управления (для других элементов)
+frame_controls = tk.Frame(window, bg='#343a40')  # Панель управления с темным фоном
+frame_controls.pack(side=tk.TOP, fill=tk.X, padx=0, pady=10)
+
+# Кнопки Start и Browse в одном контейнере для размещения их сверху слева
+frame_buttons = tk.Frame(window, bg='#343a40')  # Новый контейнер для кнопок с темным фоном
+frame_buttons.pack(side=tk.TOP, anchor="w", padx=20, pady=10)
 
 # Кнопка для старта/остановки видео
-start_button = tk.Button(frame_controls, text="Start", command=toggle_video)
-start_button.pack(side=tk.LEFT)
+start_button = tk.Button(frame_buttons, text="Start", command=toggle_video)
+start_button.pack(side=tk.LEFT, padx=10)
 
 # Кнопка для выбора видеофайла
-browse_button = tk.Button(frame_controls, text="Browse", command=browse_video)
+browse_button = tk.Button(frame_buttons, text="Browse", command=browse_video)
 browse_button.pack(side=tk.LEFT, padx=10)
 
+# Контейнер для поля ввода пути с голубым фоном
+frame_video_path = tk.Frame(window, bg='#f0f8ff', bd=2, relief=tk.RAISED)  # Новый контейнер для пути
+frame_video_path.pack(side=tk.TOP, anchor="w", padx=20, pady=10)  # Увеличиваем отступ слева (padx=20)
+
+# Метка для пути
+video_path_label = tk.Label(frame_video_path, text="Video Path:", font=("Arial", 12), bg='#007bff', fg='white')  # Синий фон для метки
+video_path_label.pack(side=tk.LEFT, padx=10)
+
 # Поле для ввода пути к видеофайлу
-video_path_label = tk.Label(frame_controls, text="Video Path:")
-video_path_label.pack(side=tk.LEFT)
-video_path_entry = tk.Entry(frame_controls, width=60)
+video_path_entry = tk.Entry(frame_video_path, width=50, font=("Arial", 12, 'bold'))  # Жирный текст
 video_path_entry.pack(side=tk.LEFT, padx=10)
+
+# Кнопка Exit, размещённая в правом верхнем углу
+exit_button = tk.Button(window, text="Exit", command=exit_program)
+exit_button.place(relx=1.0, rely=0.0, anchor='ne', x=-10, y=60) 
 
 # Окно видео
 frame_video = tk.Frame(window)
@@ -237,25 +361,33 @@ scale_video.pack(side=tk.LEFT, fill=tk.X)
 canvas = tk.Canvas(frame_video, width=700, height=500)
 canvas.pack(fill=tk.BOTH, expand=True)  # Подстраиваем холст под размер окна
 
-# Таблица с координатами
-frame_data = tk.Frame(window)
-frame_data.pack(side=tk.BOTTOM, fill=tk.X, padx=10, pady=10)
-
-label_coordinates = tk.Label(frame_data, text="X: -- | Y: -- | Z: --", font=("Arial", 14))
-label_coordinates.pack(side=tk.LEFT, padx=10)
-
 # Панель 3D визуализации
 frame_3d = tk.Frame(window)
 frame_3d.pack(side=tk.RIGHT, padx=20, pady=10)
 
+# Переносим блок с метками координат и статусом в frame_3d
+frame_tracking_info = tk.Frame(frame_3d, bg='#f0f8ff')  # Теперь контейнер для информации о статусе и координатах будет внутри frame_3d
+frame_tracking_info.pack(side=tk.TOP, fill=tk.X, pady=5)  # Расположим его прямо над 3D визуализацией
+
 # Статус индикатор
-status_label = tk.Label(window, text="Tracking Active", fg="green", font=("Arial", 12))
-status_label.pack(side=tk.BOTTOM)
+status_label = tk.Label(frame_tracking_info, text="Tracking Active", fg="#28a745", font=("Arial", 12, 'bold'))
+status_label.pack(side=tk.LEFT, padx=10)
+
+# Таблица с координатами
+label_coordinates = tk.Label(frame_tracking_info, text="X: -- | Y: -- | Z: --", font=("Arial", 14, 'bold'))
+label_coordinates.pack(side=tk.LEFT, padx=10)
 
 # Глобальные переменные для графика
 scatter_plot = None
 ax = None
 fig = None
+
+# Применение стилей после создания виджетов
+style_controls()
+style_slider()
+style_coordinates()
+style_3d_plot()
+style_video_path_container()  # Применение стиля для контейнера пути
 
 # Запуск интерфейса
 window.mainloop()
