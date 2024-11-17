@@ -21,5 +21,6 @@
                       Visibility="Visible"
                       LoadedBehavior="Manual"
                       UnloadedBehavior="Stop" /> 
+        <Canvas x:Name="OverlayCanvas" Background="Transparent" IsHitTestVisible="True" />
     </Grid>
 </UserControl>

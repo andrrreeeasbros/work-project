@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using OpenCvSharp;
+using WinMain;
 
 namespace WinMain
 {
@@ -14,6 +15,7 @@ namespace WinMain
         private bool _isStreaming = false;
         private int cameraIndex;
         private CascadeClassifier _faceCascade;
+        MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
 
         public ChildControl2()
         {
@@ -157,7 +159,7 @@ namespace WinMain
                 var height = face.Height;
 
                 // Для примера выводим их в консоль
-                Console.WriteLine($"Face detected at X: {xPos}, Y: {yPos}, Width: {width}, Height: {height}");
+                mainWindow.PrintLogInConsole($"Face detected at X: {xPos}, Y: {yPos}, Width: {width}, Height: {height}");
             }
         }
 

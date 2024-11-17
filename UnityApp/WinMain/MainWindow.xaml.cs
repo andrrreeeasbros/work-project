@@ -18,41 +18,41 @@ namespace WinMain
         private const string ABOUT_LINK = "https://github.com/andrrreeeasbros/work-project";
         private bool _isConsoleVisible = false;
 
-        private string LogValue = ""; 
-
         public MainWindow()
         {
             System.Diagnostics.Process.Start("../BuildApp/My project.exe");
             InitializeComponent();
         }
         
-        void PrintLogInConsole(string input, bool isError = false)
+public void PrintLogInConsole(string input, bool isError = false)
+{
+    try
+    {
+        // Обновление UI должно выполняться в основном потоке
+        Application.Current.Dispatcher.Invoke(() =>
         {
-            try
+            if (ConsoleTextBox == null)
             {
-                // Получаем текущий текст в TextBox и добавляем новое сообщение
-                string currentText = ConsoleTextBox.Text;
-                ConsoleTextBox.Text = currentText + input + "\n";
-
-                // Если это ошибка, меняем цвет текста на красный
-                if (isError)
-                {
-                    ConsoleTextBox.Foreground = Brushes.Red; // Меняем цвет текста на красный
-                }
-                else
-                {
-                    ConsoleTextBox.Foreground = Brushes.White; // Белый цвет для обычного текста
-                }
-
-                // Прокручиваем TextBox вниз, чтобы показать последний текст
-                ConsoleTextBox.ScrollToEnd();
+                MessageBox.Show("ConsoleTextBox не инициализирован.");
+                return;
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"!!!Ошибка вывода в консоль: {ex.Message}");
-            }
-        }
 
+            // Получаем текущий текст в TextBox и добавляем новое сообщение
+            string currentText = ConsoleTextBox.Text;
+            ConsoleTextBox.Text = currentText + input + "\n";
+
+            // Устанавливаем цвет текста в зависимости от типа сообщения
+            ConsoleTextBox.Foreground = isError ? Brushes.Red : Brushes.White;
+
+            // Прокручиваем TextBox вниз, чтобы показать последний текст
+            ConsoleTextBox.ScrollToEnd();
+        });
+    }
+    catch (Exception ex)
+    {
+        MessageBox.Show($"Ошибка вывода в консоль: {ex.Message}");
+    }
+}
 
 
         private void HideButtonsAnimation_Completed(object sender, EventArgs e)
