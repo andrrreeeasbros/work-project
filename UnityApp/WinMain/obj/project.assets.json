@@ -11,60 +11,6 @@
           "lib/DirectShowLib.dll": {}
         }
       },
-      "DlibDotNet/19.21.0.20220724": {
-        "type": "package",
-        "dependencies": {
-          "System.Drawing.Common": "5.0.1"
-        },
-        "compile": {
-          "lib/netstandard2.0/DlibDotNet.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard2.0/DlibDotNet.dll": {}
-        },
-        "runtimeTargets": {
-          "runtimes/centos-x64/native/libDlibDotNetNative.so": {
-            "assetType": "native",
-            "rid": "centos-x64"
-          },
-          "runtimes/centos-x64/native/libDlibDotNetNativeDnn.so": {
-            "assetType": "native",
-            "rid": "centos-x64"
-          },
-          "runtimes/linux-x64/native/libDlibDotNetNative.so": {
-            "assetType": "native",
-            "rid": "linux-x64"
-          },
-          "runtimes/linux-x64/native/libDlibDotNetNativeDnn.so": {
-            "assetType": "native",
-            "rid": "linux-x64"
-          },
-          "runtimes/osx-x64/native/libDlibDotNetNative.dylib": {
-            "assetType": "native",
-            "rid": "osx-x64"
-          },
-          "runtimes/osx-x64/native/libDlibDotNetNativeDnn.dylib": {
-            "assetType": "native",
-            "rid": "osx-x64"
-          },
-          "runtimes/win-x64/native/DlibDotNetNative.dll": {
-            "assetType": "native",
-            "rid": "win-x64"
-          },
-          "runtimes/win-x64/native/DlibDotNetNativeDnn.dll": {
-            "assetType": "native",
-            "rid": "win-x64"
-          },
-          "runtimes/win-x86/native/DlibDotNetNative.dll": {
-            "assetType": "native",
-            "rid": "win-x86"
-          },
-          "runtimes/win-x86/native/DlibDotNetNativeDnn.dll": {
-            "assetType": "native",
-            "rid": "win-x86"
-          }
-        }
-      },
       "Microsoft.Win32.SystemEvents/8.0.0": {
         "type": "package",
         "compile": {
@@ -203,37 +149,6 @@
         "directshowlib.nuspec",
         "lib/DirectShowLib.dll",
         "lib/DirectShowLib.pdb"
-      ]
-    },
-    "DlibDotNet/19.21.0.20220724": {
-      "sha512": "fr/NPuJLFFN+aYfQbdUvG/qyH3BLp+fGROoTc979juuiA1hS6Tjr8VfdAWx2sriTtXfvfq6X1KAmP0IOgbEuKA==",
-      "type": "package",
-      "path": "dlibdotnet/19.21.0.20220724",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "LICENSE.txt",
-        "build/net45/DlibDotNet.targets",
-        "buildTransitive/net45/DlibDotNet.targets",
-        "dlibdotnet.19.21.0.20220724.nupkg.sha512",
-        "dlibdotnet.nuspec",
-        "images/ml128.png",
-        "lib/netstandard2.0/DlibDotNet.dll",
-        "licenses/dlib.txt",
-        "licenses/giflib.txt",
-        "licenses/libjpeg.txt",
-        "licenses/libpng.txt",
-        "licenses/zlib.txt",
-        "runtimes/centos-x64/native/libDlibDotNetNative.so",
-        "runtimes/centos-x64/native/libDlibDotNetNativeDnn.so",
-        "runtimes/linux-x64/native/libDlibDotNetNative.so",
-        "runtimes/linux-x64/native/libDlibDotNetNativeDnn.so",
-        "runtimes/osx-x64/native/libDlibDotNetNative.dylib",
-        "runtimes/osx-x64/native/libDlibDotNetNativeDnn.dylib",
-        "runtimes/win-x64/native/DlibDotNetNative.dll",
-        "runtimes/win-x64/native/DlibDotNetNativeDnn.dll",
-        "runtimes/win-x86/native/DlibDotNetNative.dll",
-        "runtimes/win-x86/native/DlibDotNetNativeDnn.dll"
       ]
     },
     "Microsoft.Win32.SystemEvents/8.0.0": {
@@ -420,7 +335,6 @@
   "projectFileDependencyGroups": {
     "net9.0-windows7.0": [
       "DirectShowLib >= 1.0.0",
-      "DlibDotNet >= 19.21.0.20220724",
       "OpenCvSharp4 >= 4.10.0.20241108",
       "OpenCvSharp4.Extensions >= 4.10.0.20241108",
       "OpenCvSharp4.runtime.win >= 4.10.0.20241108"
@@ -479,10 +393,6 @@
           "DirectShowLib": {
             "target": "Package",
             "version": "[1.0.0, )"
-          },
-          "DlibDotNet": {
-            "target": "Package",
-            "version": "[19.21.0.20220724, )"
           },
           "OpenCvSharp4": {
             "target": "Package",

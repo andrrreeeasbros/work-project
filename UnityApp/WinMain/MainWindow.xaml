@@ -429,16 +429,10 @@
 <TextBox x:Name="ConsoleTextBox" Grid.Row="1" VerticalAlignment="Bottom" 
          Margin="0, 0, 719, 38" Height="125" Width="475"
          Background="#BF000000" Foreground="White" 
-         FontFamily="Monospace" FontSize="12" TextWrapping="Wrap"
+         FontFamily="Monospace" FontSize="12"
          Visibility="Visible" IsReadOnly="True"
          Text=""
          />
     </Grid>
-
-
-
-
-
-    
     
 </Window>

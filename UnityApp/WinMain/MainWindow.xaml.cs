@@ -21,38 +21,42 @@ namespace WinMain
         public MainWindow()
         {
             System.Diagnostics.Process.Start("../BuildApp/My project.exe");
-            InitializeComponent();
         }
-        
-public void PrintLogInConsole(string input, bool isError = false)
-{
-    try
-    {
-        // Обновление UI должно выполняться в основном потоке
-        Application.Current.Dispatcher.Invoke(() =>
+
+        public void PrintLogInConsole(string input, bool isError = false)
         {
-            if (ConsoleTextBox == null)
+            try
             {
-                MessageBox.Show("ConsoleTextBox не инициализирован.");
-                return;
+                // Обновление UI должно выполняться в основном потоке
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    if (ConsoleTextBox == null)
+                    {
+                        MessageBox.Show("ConsoleTextBox не инициализирован.");
+                        return;
+                    }
+
+                    // Получаем текущий текст в TextBox и добавляем новое сообщение
+                    string currentText = ConsoleTextBox.Text;
+                    ConsoleTextBox.Text = currentText + input + "\n";
+
+                    // Проверяем количество строк в консоли, если их больше 100 — очищаем
+                    var lines = ConsoleTextBox.Text.Split('\n');
+                    if (lines.Length > 100)
+                    {
+                        ConsoleTextBox.Clear(); // Очищаем консоль
+                    }
+
+                    // Прокручиваем TextBox вниз, чтобы показать последний текст
+                    ConsoleTextBox.ScrollToEnd();
+                });
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка вывода в консоль: {ex.Message}");
+            }
+        }
 
-            // Получаем текущий текст в TextBox и добавляем новое сообщение
-            string currentText = ConsoleTextBox.Text;
-            ConsoleTextBox.Text = currentText + input + "\n";
-
-            // Устанавливаем цвет текста в зависимости от типа сообщения
-            ConsoleTextBox.Foreground = isError ? Brushes.Red : Brushes.White;
-
-            // Прокручиваем TextBox вниз, чтобы показать последний текст
-            ConsoleTextBox.ScrollToEnd();
-        });
-    }
-    catch (Exception ex)
-    {
-        MessageBox.Show($"Ошибка вывода в консоль: {ex.Message}");
-    }
-}
 
 
         private void HideButtonsAnimation_Completed(object sender, EventArgs e)
