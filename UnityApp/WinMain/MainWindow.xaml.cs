@@ -18,11 +18,42 @@ namespace WinMain
         private const string ABOUT_LINK = "https://github.com/andrrreeeasbros/work-project";
         private bool _isConsoleVisible = false;
 
+        private string LogValue = ""; 
+
         public MainWindow()
         {
             System.Diagnostics.Process.Start("../BuildApp/My project.exe");
             InitializeComponent();
         }
+        
+        void PrintLogInConsole(string input, bool isError = false)
+        {
+            try
+            {
+                // Получаем текущий текст в TextBox и добавляем новое сообщение
+                string currentText = ConsoleTextBox.Text;
+                ConsoleTextBox.Text = currentText + input + "\n";
+
+                // Если это ошибка, меняем цвет текста на красный
+                if (isError)
+                {
+                    ConsoleTextBox.Foreground = Brushes.Red; // Меняем цвет текста на красный
+                }
+                else
+                {
+                    ConsoleTextBox.Foreground = Brushes.White; // Белый цвет для обычного текста
+                }
+
+                // Прокручиваем TextBox вниз, чтобы показать последний текст
+                ConsoleTextBox.ScrollToEnd();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"!!!Ошибка вывода в консоль: {ex.Message}");
+            }
+        }
+
+
 
         private void HideButtonsAnimation_Completed(object sender, EventArgs e)
         {
@@ -33,11 +64,13 @@ namespace WinMain
         private void Camera1Button_Click(object sender, RoutedEventArgs e)
         {
             SendMessageToUnity("SwitchCamera:2");
+            PrintLogInConsole("Sended message to unity: SwitchCamera:2");
         }
 
         private void Camera2Button_Click(object sender, RoutedEventArgs e)
         {
             SendMessageToUnity("SwitchCamera:1");
+            PrintLogInConsole("Sended message to unity: SwitchCamera:1");
         }
 
         private void SendMessageToUnity(string message)
@@ -52,6 +85,7 @@ namespace WinMain
             }
             catch (Exception ex)
             {
+                PrintLogInConsole($"Error: Fail conected to Unity {ex.Message}", true);
                 MessageBox.Show("Ошибка подключения к Unity: " + ex.Message);
             }
         }
@@ -119,6 +153,8 @@ namespace WinMain
                     HorizontalAlignment = HorizontalAlignment.Center,
                     VerticalAlignment = VerticalAlignment.Center
                 });
+                PrintLogInConsole("No found devices!", true);
+                
             }
             else
             {
@@ -135,6 +171,7 @@ namespace WinMain
                     button.Click += (s, e) => SelectCamera(device);
                     SlidePanelContent.Children.Add(button);
                 }
+                PrintLogInConsole("Founded devices:" + devices);
             }
         }
 
@@ -206,10 +243,13 @@ namespace WinMain
             // Если в ContentHost находится ChildControl2, вызываем метод для потока камеры
             if (ChildControlHost.Content is ChildControl2 childControl)
             {
+                PrintLogInConsole($"Trying to chose camera ({device.Name}) with index: {cameraIndex}");
+                  
                 childControl.StartCameraStream(cameraIndex);
             }
             else
             {
+                PrintLogInConsole("Error: Can not find element {ChildControl2 childControl}", true);
                 MessageBox.Show("Ошибка: не удалось найти нужный элемент.");
             }
         }
@@ -300,6 +340,7 @@ namespace WinMain
                                 "Ошибка",
                                 MessageBoxButton.OK,
                                 MessageBoxImage.Error);
+                PrintLogInConsole("Error: Can not open {ABOUT_LINK}.", true);
             }
         };
 
