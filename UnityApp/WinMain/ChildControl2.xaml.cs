@@ -13,11 +13,15 @@ namespace WinMain
         private Mat _frame;
         private bool _isStreaming = false;
         private int cameraIndex;
+        private CascadeClassifier _faceCascade;
 
         public ChildControl2()
         {
             InitializeComponent();
             this.Loaded += ChildControl2_Loaded;
+
+            // Загружаем классификатор для поиска лиц
+            _faceCascade = new CascadeClassifier("res/haarcascade_frontalface_default.xml");
         }
 
         private void ChildControl2_Loaded(object sender, RoutedEventArgs e)
@@ -40,6 +44,7 @@ namespace WinMain
                 MessageBox.Show("Ошибка при воспроизведении видео: " + ex.Message);
             }
         }
+
         private void BackgroundVideo_MediaEnded(object sender, RoutedEventArgs e)
         {
             try
@@ -61,42 +66,40 @@ namespace WinMain
                 MessageBox.Show("Ошибка при повторном воспроизведении видео: " + ex.Message);
             }
         }
-        // Метод для старта потока камеры
-            public void StartCameraStream(int cameraIndexLocal)
+
+        public void StartCameraStream(int cameraIndexLocal)
+        {
+            cameraIndex = cameraIndexLocal;
+
+            try
             {
-                cameraIndex = cameraIndexLocal;
-
-                try
+                if (cameraIndex == -1)
                 {
-                    if (cameraIndex == -1)
-                    {
-                        MessageBox.Show("Камера не найдена.");
-                        BackgroundVideo.Visibility = Visibility.Visible; // Показываем BackgroundVideo при ошибке
-                        return;
-                    }
-
-                    _capture = new VideoCapture(cameraIndex);
-                    if (!_capture.IsOpened())
-                    {
-                        BackgroundVideo.Visibility = Visibility.Visible; // Показываем BackgroundVideo при ошибке
-                        return;
-                    }
-
-                    _frame = new Mat();
-                    _isStreaming = true;
-
-                    BackgroundVideo.Visibility = Visibility.Collapsed; // Скрываем BackgroundVideo, если камера успешно запущена
-                    CaptureFrame();
+                    MessageBox.Show("Камера не найдена.");
+                    BackgroundVideo.Visibility = Visibility.Visible; // Показываем BackgroundVideo при ошибке
+                    return;
                 }
-                catch (Exception ex)
+
+                _capture = new VideoCapture(cameraIndex);
+                if (!_capture.IsOpened())
                 {
-                    MessageBox.Show("Ошибка при запуске камеры: " + ex.Message);
-                    BackgroundVideo.Visibility = Visibility.Visible;// Показываем BackgroundVideo при ошибке
+                    BackgroundVideo.Visibility = Visibility.Visible; // Показываем BackgroundVideo при ошибке
+                    return;
                 }
+
+                _frame = new Mat();
+                _isStreaming = true;
+
+                BackgroundVideo.Visibility = Visibility.Collapsed; // Скрываем BackgroundVideo, если камера успешно запущена
+                CaptureFrame();
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка при запуске камеры: " + ex.Message);
+                BackgroundVideo.Visibility = Visibility.Visible; // Показываем BackgroundVideo при ошибке
+            }
+        }
 
-
-        // Метод для захвата кадров с камеры
         private void CaptureFrame()
         {
             if (_isStreaming)
@@ -107,6 +110,7 @@ namespace WinMain
                     {
                         if (!_frame.Empty())
                         {
+                            DetectFaceAndDrawRectangle(); // Метод для обнаружения лица
                             BackgroundImage.Source = ConvertMatToBitmapSource(_frame); // Отображаем кадр на Image
                         }
                         else
@@ -128,6 +132,32 @@ namespace WinMain
                     _isStreaming = false;
                     BackgroundVideo.Visibility = Visibility.Visible; // Показываем BackgroundVideo при ошибке
                 }
+            }
+        }
+
+        // Обнаружение лица и отрисовка квадрата
+        private void DetectFaceAndDrawRectangle()
+        {
+            // Преобразуем кадр в черно-белое изображение для классификатора
+            var grayFrame = new Mat();
+            Cv2.CvtColor(_frame, grayFrame, ColorConversionCodes.BGR2GRAY);
+
+            // Ищем лица
+            var faces = _faceCascade.DetectMultiScale(grayFrame, 1.1, 4, HaarDetectionTypes.ScaleImage, new OpenCvSharp.Size(30, 30));
+
+            foreach (var face in faces)
+            {
+                // Отображаем прямоугольник вокруг лица
+                Cv2.Rectangle(_frame, face, new Scalar(0, 0, 255), 2);
+
+                // Возвращаем координаты и размеры (X_pos, Y_pos, X_size, Y_size)
+                var xPos = face.X;
+                var yPos = face.Y;
+                var width = face.Width;
+                var height = face.Height;
+
+                // Для примера выводим их в консоль
+                Console.WriteLine($"Face detected at X: {xPos}, Y: {yPos}, Width: {width}, Height: {height}");
             }
         }
 

@@ -154,7 +154,7 @@ namespace WinMain
                     VerticalAlignment = VerticalAlignment.Center
                 });
                 PrintLogInConsole("No found devices!", true);
-                
+
             }
             else
             {

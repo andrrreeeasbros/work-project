@@ -54,6 +54,10 @@
               "target": "Package",
               "version": "[1.0.0, )"
             },
+            "DlibDotNet": {
+              "target": "Package",
+              "version": "[19.21.0.20220724, )"
+            },
             "OpenCvSharp4": {
               "target": "Package",
               "version": "[4.10.0.20241108, )"
